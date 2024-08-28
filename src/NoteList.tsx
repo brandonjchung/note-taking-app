@@ -100,7 +100,7 @@ function EditTagsModal({ availableTags, show, onDeleteTag, onUpdateTag, handleCl
                 <Stack gap={2}>
                     {availableTags.map(tag => (
                         <Row key={tag.id}>
-                            <Col>
+                            <Col class="col-6">
                                 <Form.Control type="text" value={tag.label} onChange={e => onUpdateTag({id: tag.id, label: e.target.value})}></Form.Control>
                             </Col>
                             <Col>

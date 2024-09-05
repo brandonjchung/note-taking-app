@@ -1,4 +1,4 @@
-import { Tag } from "./App"
+import { Tag } from "../App"
 import styles from "./NoteCard.module.css"
 import { Card, Stack, Badge } from "react-bootstrap"
 import { Link } from "react-router-dom"

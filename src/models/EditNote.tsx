@@ -1,5 +1,5 @@
 import { NoteForm } from "./NoteForm"
-import { NoteData, Tag } from "./App"
+import { NoteData, Tag } from "../App"
 import { useNote } from "./NoteLayout"
 
 type EditNoteProps = {

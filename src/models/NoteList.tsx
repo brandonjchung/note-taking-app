@@ -2,7 +2,7 @@ import { Form, Row, Col, Stack, Button, Modal } from "react-bootstrap"
 import ReactSelect from "react-select"
 import { Link } from "react-router-dom"
 import { useState } from "react"
-import { Tag, Note } from "./App"
+import { Tag, Note } from "../App"
 import { useMemo } from "react"
 import { NoteCard } from "./NoteCard"
 

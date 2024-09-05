@@ -1,14 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Routes, Route, Navigate } from "react-router-dom"
 import { Container } from "react-bootstrap"
-import { NewNote } from "./NewNote"
-import { useLocalStorage } from "./useLocalStorage"
+import { NewNote } from "./models/NewNote"
+import { useLocalStorage } from "./helper/useLocalStorage"
 import { useMemo } from "react"
 import { v4 as uuidV4 } from "uuid"
-import { NoteList } from "./NoteList"
-import { NoteLayout } from "./NoteLayout"
-import { Note } from "./Note"
-import { EditNote } from "./EditNote"
+import { NoteList } from "./models/NoteList"
+import { NoteLayout } from "./models/NoteLayout"
+import { Note } from "./models/Note"
+import { EditNote } from "./models/EditNote"
 
 export type Note = {
     id: string

@@ -8,3 +8,11 @@
 .main-container {
     padding-top:12px;
 }
+
+.customModal {
+    background-color: green !important;
+}
+
+.photoshopPicker {
+    box-sizing: border-box !important;
+}

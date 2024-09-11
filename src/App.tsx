@@ -10,7 +10,7 @@ import { NoteLayout } from "./models/NoteLayout"
 import { Note } from "./models/Note"
 import { EditNote } from "./models/EditNote"
 import { useState, useEffect } from "react"
-import { PhotoshopPicker  } from "react-color"
+import { PhotoshopPicker  } from "react-color" 
 import styles from './App.module.css'
 
 export type Note = {
@@ -44,7 +44,7 @@ export type Tag = {
 function App() {
     const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", [])
     const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", [])
-    const [backgroundColor, setBackgroundColor] = useState('#fff');
+    const [backgroundColor, setBackgroundColor] = useLocalStorage<string>("BACKGROUND_COLOR", '#fff')
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     useEffect(() => {

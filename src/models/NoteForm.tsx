@@ -5,14 +5,17 @@ import { FormEvent, useRef } from "react"
 import { NoteData, Tag } from "../App"
 import { useState } from "react"
 import { v4 as uuidV4 } from "uuid"
+import { siteStyles } from "../interfaces/siteStyles"
+import globalStyle from "../assets/global.module.css"
 
 type NoteFormProps = {
     onSubmit: (data: NoteData) => void
     onAddTag: (data: Tag) => void
     availableTags: Tag[]
+    siteStyles: siteStyles
 } & Partial<NoteData>
 
-export function NoteForm({ onSubmit, onAddTag, availableTags, title="", markdown = "", tags = [] } : NoteFormProps) {
+export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title="", markdown = "", tags = [] } : NoteFormProps) {
     const titleRef = useRef<HTMLInputElement>(null)
     const markdownRef = useRef<HTMLTextAreaElement>(null)
     const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
@@ -36,13 +39,13 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, title="", markdown
                 <Row>
                     <Col>
                         <Form.Group controlId="title">
-                            <Form.Label>Title</Form.Label>
+                            <Form.Label style={{ color: siteStyles.label }}>Title</Form.Label>
                             <Form.Control ref={titleRef} defaultValue={title} required/>
                         </Form.Group>
                     </Col>    
                     <Col>
                         <Form.Group controlId="tags">
-                            <Form.Label>Tags</Form.Label>
+                            <Form.Label style={{ color: siteStyles.label }}>Tags</Form.Label>
                             {/* 
                                 CreatableReactSelect options in the form {label, value}
                             */}
@@ -70,15 +73,25 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, title="", markdown
                 <Row>
                     <Col>
                         <Form.Group controlId="markdown">
-                            <Form.Label>Body</Form.Label>
+                            <Form.Label style={{ color: siteStyles.label }}>Body</Form.Label>
                             <Form.Control ref={markdownRef} defaultValue={markdown} as="textarea" rows={15}required/>
                         </Form.Group>
                     </Col>    
                 </Row>
                 <Stack direction="horizontal" gap={2} className="justify-content-end">
-                    <Button type="submit" variant="primary">Save</Button>
+                    <Button 
+                        style={{ background: siteStyles.primary, borderColor: siteStyles.primary, color:siteStyles.label }}
+                        className={globalStyle.button} 
+                        type="submit" >
+                        Save
+                        </Button>
                     <Link to="..">
-                        <Button type="button" variant="outline-secondary">Cancel</Button>
+                        <Button 
+                            style={{ background: siteStyles.secondary, borderColor: siteStyles.secondary, color:siteStyles.label }}
+                            type="button" 
+                            className={globalStyle.button}>
+                            Cancel
+                        </Button>
                     </Link>
                 </Stack>
             </Stack>

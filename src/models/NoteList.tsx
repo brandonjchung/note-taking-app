@@ -5,15 +5,18 @@ import { useState } from "react"
 import { Tag, Note } from "../App"
 import { useMemo } from "react"
 import { NoteCard } from "./NoteCard"
+import { siteStyles } from "../interfaces/siteStyles"
+import globalStyle from "../assets/global.module.css"
 
 type NoteListProps = {
     availableTags: Tag[]
     notes: Note[]
     onDeleteTag: (id: string) => void
     onUpdateTag: (data: Tag) => void
+    siteStyles: siteStyles
 }
 
-export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag } : NoteListProps) {
+export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteStyles } : NoteListProps) {
     const [selectedTags, setSelectedTags] = useState<Tag[]>([])
     const [title, setTitle] = useState("")
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -27,18 +30,27 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag } : No
 
     return <>
         <Row className="align-items-center mb-4">
-            <Col><h1>Notes</h1></Col>
+            <Col><h1 style={{ color: siteStyles.label }}>Notes</h1></Col>
             <Col xs="auto">
                 <Stack gap={2} direction="horizontal">
                     <Link to="/new">
-                        <Button variant="primary">Create</Button>
+                        <Button 
+                            className={globalStyle.button}
+                            style={{ backgroundColor: siteStyles.primary, borderColor: siteStyles.primary, color: siteStyles.label}}>
+                            Create
+                        </Button>
                     </Link>
-                    <Button onClick={() => setModalIsOpen(true)} variant="outline-secondary">Edit Tags</Button>
+                    <Button 
+                        className={globalStyle.button}
+                        onClick={() => setModalIsOpen(true)} 
+                        style={{ backgroundColor: siteStyles.secondary, borderColor: siteStyles.secondary, color: siteStyles.label}}>
+                        Edit Tags
+                    </Button>
                 </Stack>
             </Col>
         </Row>
         <Form>
-            <Row className="mb-4">
+            <Row className="mb-4" style={{ color: siteStyles.label }}>
                 <Col>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
@@ -78,6 +90,7 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag } : No
             onDeleteTag={onDeleteTag} 
             onUpdateTag={onUpdateTag}
             handleClose={() => setModalIsOpen(false)}
+            siteStyles={siteStyles}
         />
     </>
 }
@@ -88,14 +101,15 @@ type EditTagsModalProps = {
     onDeleteTag: (id: string) => void
     onUpdateTag: (data: Tag) => void
     handleClose: () => void
+    siteStyles: siteStyles
 }
 
-function EditTagsModal({ availableTags, show, onDeleteTag, onUpdateTag, handleClose}: EditTagsModalProps) {
+function EditTagsModal({ availableTags, show, onDeleteTag, onUpdateTag, handleClose, siteStyles }: EditTagsModalProps) {
     return <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
+        <Modal.Header  style={{ background: siteStyles.background, color: siteStyles.label}} closeButton>
             <Modal.Title>Edit Tags</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ background: siteStyles.background, color: siteStyles.label}} >
             <Form>
                 <Stack gap={2}>
                     {availableTags.map(tag => (

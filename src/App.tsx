@@ -1,18 +1,17 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Routes, Route, Navigate } from "react-router-dom"
-import { Container, Form, Modal, Col, Row, Button, ButtonGroup, Stack } from "react-bootstrap"
-import { NewNote } from "./models/NewNote"
+import { Container, Button, Stack } from "react-bootstrap"
+import { NewNote } from "./components/NewNote"
 import { useLocalStorage } from "./helper/useLocalStorage"
 import { useMemo } from "react"
 import { v4 as uuidV4 } from "uuid"
-import { NoteList } from "./models/NoteList"
-import { NoteLayout } from "./models/NoteLayout"
-import { Note } from "./models/Note"
-import { EditNote } from "./models/EditNote"
+import { NoteList } from "./components/NoteList"
+import { NoteLayout } from "./components/NoteLayout"
+import { Note } from "./components/Note"
+import { EditNote } from "./components/EditNote"
 import { useState, useEffect } from "react"
-import { PhotoshopPicker  } from "react-color" 
+import { SettingsModal } from "./components/SettingsModal"
 import styles from './App.module.css'
-import { siteStyles } from "./interfaces/siteStyles"
 
 export type Note = {
     id: string
@@ -112,212 +111,6 @@ function App() {
         setTags(prevTags => {
             return prevTags.filter(tag => tag.id != id)
         })
-    }
-        
-    type SettingsModalProps = {
-        show: boolean,
-        siteStyles: siteStyles
-        setBackgroundColor: (color: string) => void,
-        setPrimaryButtonColor: (color: string) => void,
-        setSecondaryButtonColor: (color: string) => void,
-        setLabelColor: (color: string) => void,
-        setModalIsOpen: (state: boolean) => void
-    }
-
-    // move this outside when you have a chance
-    function SettingsModal( props : SettingsModalProps ) {
-        interface colorObj {
-            hex: string
-        }
-
-        const [currSetting, setCurrSetting] = useState('profile');
-        const [currSubSetting, setCurrSubSetting] = useState('Background Color');
-        const [currColor, setCurrColor] = useState(props.siteStyles.background);
-        const [showBackgroundColorPicker, setShowBackgroundColorPicker] = useState(true);
-
-        const handleAccept = ( currSubSetting: string ) => {
-            
-            if(currSubSetting == 'Background Color'){
-                props.setBackgroundColor(currColor);
-            }
-            else if(currSubSetting == 'Primary Button Color'){
-                props.setPrimaryButtonColor(currColor);
-            }
-            else if(currSubSetting == 'Secondary Button Color'){
-                props.setSecondaryButtonColor(currColor);
-            }
-            else if(currSubSetting == 'Label'){
-                props.setLabelColor(currColor);
-            }
-            // try like event stop propogationn or something here
-        };
-        const handleChange = (color: colorObj) => {
-            setCurrColor(color.hex);
-        };
-        const handleCancel = () => {
-            setShowBackgroundColorPicker(false);
-        };
-        const handleSubtheme = ( currSubSetting: string ) => {
-            setCurrSubSetting(currSubSetting);
-            if(currSubSetting == 'Background Color'){
-                setCurrColor(props.siteStyles.background);
-            }
-            else if(currSubSetting == 'Primary Button Color'){
-                setCurrColor(props.siteStyles.primary);
-            }
-            else if(currSubSetting == 'Secondary Button Color'){
-                setCurrColor(props.siteStyles.secondary);
-            }
-            else if(currSubSetting == 'Label'){
-                setCurrColor(props.siteStyles.label);
-            }
-        }
-
-        const primaryStyleProps = {
-            background: props.siteStyles.primary, 
-            borderColor: props.siteStyles.primary, 
-            color:props.siteStyles.label,
-        }
-        const secondaryStyleProps = {
-            background: props.siteStyles.secondary, 
-            borderColor: props.siteStyles.secondary, 
-            color:props.siteStyles.label,
-        }
-
-        return <Modal contentClassName={styles.customModal} size="xl" show={props.show} onHide={() => {props.setModalIsOpen(false)}} centered>
-            <Modal.Header style={{ background: props.siteStyles.background }} closeButton>
-            </Modal.Header>
-            <Modal.Body style={{ background: props.siteStyles.background, color: props.siteStyles.label, height: window.innerHeight*.6 }} >
-                <Form>
-                    <Row>
-                        <Col xs={3}>
-                            <Row className="justify-content-center">
-                                <ButtonGroup vertical>
-                                    <Button 
-                                        style={{ ...primaryStyleProps }}
-                                        onClick={() => {setCurrSetting('profile')}} 
-                                        className={styles.modalButton}>
-                                        Profile
-                                    </Button>
-                                    <Button 
-                                        style={{ ...primaryStyleProps }}
-                                        onClick={() => {setCurrSetting('themes')}} 
-                                        className={styles.modalButton} >
-                                        Themes
-                                    </Button>
-                                    <Button 
-                                        style={{ ...primaryStyleProps }}
-                                        onClick={() => {setCurrSetting('layout')}} 
-                                        className={styles.modalButton} >
-                                        Layout
-                                    </Button>
-                                </ButtonGroup>
-                            </Row>
-                        </Col>
-                        <Col xs={9}>
-                            <Row className="justify-content-center">
-                                {currSetting=='profile' && (
-                                    <Col>Profile</Col>
-                                )}
-                                {currSetting=='themes' && (
-                                    <Col xs={3}>
-                                        <Row><Button 
-                                            style={{ ...secondaryStyleProps }}
-                                            onClick={() => {handleSubtheme('Background Color')}} 
-                                            className={styles.modalButton} >
-                                            Background Color
-                                        </Button></Row>
-                                        <Row><Button 
-                                            style={{ ...secondaryStyleProps }}
-                                            onClick={() => {handleSubtheme('Primary Button Color')}} 
-                                            className={styles.modalButton} >
-                                            Primary Button Color
-                                        </Button></Row>
-                                        <Row><Button 
-                                            style={{ ...secondaryStyleProps }}
-                                            onClick={() => {handleSubtheme('Secondary Button Color')}} 
-                                            className={styles.modalButton} >
-                                            Secondary Button Color
-                                        </Button></Row>
-                                        <Row><Button 
-                                            style={{ ...secondaryStyleProps }}
-                                            onClick={() => {handleSubtheme('Label')}} 
-                                            className={styles.modalButton} >
-                                            Label
-                                        </Button></Row>
-                                    </Col>
-                                    
-                                )}
-                                {/* Refactor later: can't diagnose why current color doesn't update upon rerender, temporary suboptimal solution */}
-                                {/* {currSetting=='themes' && currSubSetting=='Background Color' && showBackgroundColorPicker == true && (
-                                    <Col xs={9}>
-                                    <PhotoshopPicker 
-                                        className={styles.photoshopPicker}
-                                        header={currSubSetting}
-                                        color={currColor}
-                                        onAccept={() => {handleAccept(currSubSetting)}}
-                                        onChange={handleChange}
-                                        onCancel={handleCancel}
-                                    />
-                                    </Col>
-                                )}  */}
-                                {currSetting=='themes' && currSubSetting=='Background Color' && showBackgroundColorPicker == true && (
-                                    <Col xs={9}>
-                                    <PhotoshopPicker 
-                                        className={styles.photoshopPicker}
-                                        header={currSubSetting}
-                                        color={currColor}
-                                        onAccept={() => {handleAccept(currSubSetting)}}
-                                        onChange={handleChange}
-                                        onCancel={handleCancel}
-                                    />
-                                    </Col>
-                                )} 
-                                {currSetting=='themes' && currSubSetting=='Primary Button Color' && showBackgroundColorPicker == true && (
-                                    <Col xs={9}>
-                                    <PhotoshopPicker 
-                                        className={styles.photoshopPicker}
-                                        header={currSubSetting}
-                                        color={currColor}
-                                        onAccept={() => {handleAccept(currSubSetting)}}
-                                        onChange={handleChange}
-                                        onCancel={handleCancel}
-                                    />
-                                    </Col>
-                                )}
-                                {currSetting=='themes' && currSubSetting=='Secondary Button Color' && showBackgroundColorPicker == true && (
-                                    <Col xs={9}>
-                                    <PhotoshopPicker 
-                                        className={styles.photoshopPicker}
-                                        header={currSubSetting}
-                                        color={currColor}
-                                        onAccept={() => {handleAccept(currSubSetting)}}
-                                        onChange={handleChange}
-                                        onCancel={handleCancel}
-                                    />
-                                    </Col>
-                                )}
-                                {currSetting=='themes' && currSubSetting=='Label' && showBackgroundColorPicker == true && (
-                                    <Col xs={9}>
-                                    <PhotoshopPicker 
-                                        className={styles.photoshopPicker}
-                                        header={currSubSetting}
-                                        color={currColor}
-                                        onAccept={() => {handleAccept(currSubSetting)}}
-                                        onChange={handleChange}
-                                        onCancel={handleCancel}
-                                    />
-                                    </Col>
-                                )}
-                                {currSetting=='layout' && (
-                                    <Col>Layout</Col>
-                                )}
-                            </Row>
-                        </Col>
-                    </Row>
-                </Form>
-            </Modal.Body>
-        </Modal>
     }
 
     return (

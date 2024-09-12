@@ -12,23 +12,7 @@
     padding: 8px 0px !important;
     margin: 1px 0px !important;
 }
-.customModal {
-    background-color: green !important;
-}
 
 .mainContainer {
     padding-top:32px;
-}
-
-.modalButton {
-    width:100%;
-    border-radius:4px;
-    text-align: center;
-    padding: 8px 0px !important;
-    margin: 1px 0px !important;
-}
-
-.photoshopPicker {
-    box-sizing: border-box !important;
-    width: 100% !important;
 }

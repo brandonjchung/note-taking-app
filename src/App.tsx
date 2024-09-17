@@ -7,7 +7,7 @@ import { useMemo } from "react"
 import { v4 as uuidV4 } from "uuid"
 import { NoteList } from "./components/NoteList"
 import { NoteLayout } from "./components/NoteLayout"
-import { Note } from "./components/Note"
+import { ViewNote } from "./components/ViewNote"
 import { EditNote } from "./components/EditNote"
 import { useState, useEffect } from "react"
 import { SettingsModal } from "./components/SettingsModal"
@@ -43,6 +43,7 @@ function App() {
     const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", [])
     const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", [])
     const [backgroundColor, setBackgroundColor] = useLocalStorage<string>("BACKGROUND_COLOR", '#ffffff')
+    const [noteColor, setNote] = useLocalStorage<string>("NOTE_COLOR", '#ffffff')
     const [primaryButtonColor, setPrimaryButtonColor] = useLocalStorage<string>("PRIMARY_COLOR", '#1A00FF')
     const [secondaryButtonColor, setSecondaryButtonColor] = useLocalStorage<string>("SECONDARY_COLOR", '#B3B3B3')
     const [labelColor, setLabelColor] = useLocalStorage<string>("LABEL_COLOR", '##000000')
@@ -50,6 +51,7 @@ function App() {
     
     const siteStyles = {
         background: backgroundColor,
+        note: noteColor,
         primary: primaryButtonColor,
         secondary: secondaryButtonColor,
         label: labelColor,
@@ -127,6 +129,7 @@ function App() {
                 show={modalIsOpen} 
                 siteStyles={siteStyles}
                 setBackgroundColor={setBackgroundColor} 
+                setNoteColor={setNote}
                 setPrimaryButtonColor={setPrimaryButtonColor}
                 setSecondaryButtonColor={setSecondaryButtonColor}
                 setLabelColor={setLabelColor}
@@ -136,7 +139,7 @@ function App() {
                 <Route path="/" element={<NoteList onUpdateTag={onUpdateTag} onDeleteTag={onDeleteTag} availableTags={tags} notes={notesWithTags} siteStyles={siteStyles}/>}/>
                 <Route path="/new" element={<NewNote onSubmit={onCreateNote} onAddTag={onAddTag} availableTags={tags} siteStyles={siteStyles}/>}/>
                 <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
-                    <Route index element={<Note siteStyles={siteStyles} onDeleteNote={onDeleteNote}/>}/>
+                    <Route index element={<ViewNote siteStyles={siteStyles} onDeleteNote={onDeleteNote}/>}/>
                     <Route path="edit" element={<EditNote onSubmit={onEditNote} onAddTag={onAddTag} availableTags={tags} siteStyles={siteStyles}/>}/>
                 </Route>
                 <Route path="/*" element={<Navigate to="/" />}/>

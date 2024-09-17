@@ -28,6 +28,12 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
         })
     }, [title, selectedTags, notes]) 
 
+    const siteStyledTextBoxes = {
+        backgroundColor: siteStyles.note, 
+        borderColor: siteStyles.note, 
+        color: siteStyles.label
+    }
+
     return <>
         <Row className="align-items-center mb-4">
             <Col><h1 style={{ color: siteStyles.label }}>Notes</h1></Col>
@@ -36,14 +42,14 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
                     <Link to="/new">
                         <Button 
                             className={globalStyle.button}
-                            style={{ backgroundColor: siteStyles.primary, borderColor: siteStyles.primary, color: siteStyles.label}}>
+                            style={{ backgroundColor: siteStyles.primary, borderColor: siteStyles.primary, color: siteStyles.label }}>
                             Create
                         </Button>
                     </Link>
                     <Button 
                         className={globalStyle.button}
                         onClick={() => setModalIsOpen(true)} 
-                        style={{ backgroundColor: siteStyles.secondary, borderColor: siteStyles.secondary, color: siteStyles.label}}>
+                        style={{ backgroundColor: siteStyles.secondary, borderColor: siteStyles.secondary, color: siteStyles.label }}>
                         Edit Tags
                     </Button>
                 </Stack>
@@ -54,13 +60,39 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
                 <Col>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" value={title} onChange={e => setTitle(e.target.value)}></Form.Control>
+                        <Form.Control 
+                            style={{ ...siteStyledTextBoxes }}
+                            onChange={e => setTitle(e.target.value)} 
+                            value={title} 
+                            type="text" />
                     </Form.Group>
                 </Col>
                 <Col>
                     <Form.Group controlId="tags">
                         <Form.Label>Tags</Form.Label>
                         <ReactSelect 
+                            styles={{
+                                control: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTextBoxes
+                                }),
+                                menu: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTextBoxes
+                                }),
+                                input: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTextBoxes
+                                }),
+                                noOptionsMessage: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTextBoxes
+                                }),
+                                option: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTextBoxes
+                                }),
+                            }}
                             options={availableTags.map(tag => {
                                 return {label: tag.label, value: tag.id}
                             })}
@@ -80,7 +112,7 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
         <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
             {filteredNotes.map(note => (
                 <Col key={note.id}>
-                    <NoteCard id={note.id} title={note.title} tags={note.tags}/>
+                    <NoteCard id={note.id} title={note.title} tags={note.tags} siteStyles={siteStyles}/>
                 </Col>
             ))}
         </Row>

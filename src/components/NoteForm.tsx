@@ -21,6 +21,12 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title=
     const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
     const navigate = useNavigate()
     
+    const siteStyledTextBoxes = {
+        backgroundColor: siteStyles.note, 
+        borderColor: siteStyles.note, 
+        color: siteStyles.label
+    }
+    
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
@@ -40,7 +46,7 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title=
                     <Col>
                         <Form.Group controlId="title">
                             <Form.Label style={{ color: siteStyles.label }}>Title</Form.Label>
-                            <Form.Control ref={titleRef} defaultValue={title} required/>
+                            <Form.Control style={{ ...siteStyledTextBoxes }} ref={titleRef} defaultValue={title} required/>
                         </Form.Group>
                     </Col>    
                     <Col>
@@ -50,6 +56,40 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title=
                                 CreatableReactSelect options in the form {label, value}
                             */}
                             <CreatableReactSelect 
+                                styles={{
+                                    control: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                    menu: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                    input: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                    noOptionsMessage: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                    multiValue: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                    multiValueLabel: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                    indicatorSeparator: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                    option: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTextBoxes
+                                    }),
+                                }}
                                 onCreateOption={label => {
                                     const newTag = {id: uuidV4(), label}
                                     onAddTag(newTag)
@@ -74,7 +114,7 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title=
                     <Col>
                         <Form.Group controlId="markdown">
                             <Form.Label style={{ color: siteStyles.label }}>Body</Form.Label>
-                            <Form.Control ref={markdownRef} defaultValue={markdown} as="textarea" rows={15}required/>
+                            <Form.Control style={{ ...siteStyledTextBoxes }} ref={markdownRef} defaultValue={markdown} as="textarea" rows={15} required/>
                         </Form.Group>
                     </Col>    
                 </Row>

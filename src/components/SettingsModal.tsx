@@ -8,6 +8,7 @@ type SettingsModalProps = {
     show: boolean,
     siteStyles: siteStyles
     setBackgroundColor: (color: string) => void,
+    setNoteColor: (color: string) => void,
     setPrimaryButtonColor: (color: string) => void,
     setSecondaryButtonColor: (color: string) => void,
     setLabelColor: (color: string) => void,
@@ -30,6 +31,9 @@ export function SettingsModal( props : SettingsModalProps ) {
         if(currSubSetting == 'Background Color'){
             props.setBackgroundColor(currColor);
         }
+        else if(currSubSetting == 'Note Color'){
+            props.setNoteColor(currColor);
+        }
         else if(currSubSetting == 'Primary Button Color'){
             props.setPrimaryButtonColor(currColor);
         }
@@ -51,6 +55,9 @@ export function SettingsModal( props : SettingsModalProps ) {
         setCurrSubSetting(currSubSetting);
         if(currSubSetting == 'Background Color'){
             setCurrColor(props.siteStyles.background);
+        }
+        else if(currSubSetting == 'Note Color'){
+            setCurrColor(props.siteStyles.note);
         }
         else if(currSubSetting == 'Primary Button Color'){
             setCurrColor(props.siteStyles.primary);
@@ -119,6 +126,12 @@ export function SettingsModal( props : SettingsModalProps ) {
                                     </Button></Row>
                                     <Row><Button 
                                         style={{ ...secondaryStyleProps }}
+                                        onClick={() => {handleSubtheme('Note Color')}} 
+                                        className={styles.modalButton} >
+                                        Note Color
+                                    </Button></Row>
+                                    <Row><Button 
+                                        style={{ ...secondaryStyleProps }}
                                         onClick={() => {handleSubtheme('Primary Button Color')}} 
                                         className={styles.modalButton} >
                                         Primary Button Color
@@ -163,6 +176,18 @@ export function SettingsModal( props : SettingsModalProps ) {
                                 />
                                 </Col>
                             )} 
+                            {currSetting=='themes' && currSubSetting=='Note Color' && showBackgroundColorPicker == true && (
+                                <Col xs={9}>
+                                <PhotoshopPicker 
+                                    className={styles.photoshopPicker}
+                                    header={currSubSetting}
+                                    color={currColor}
+                                    onAccept={() => {handleAccept(currSubSetting)}}
+                                    onChange={handleChange}
+                                    onCancel={handleCancel}
+                                />
+                                </Col>
+                            )}
                             {currSetting=='themes' && currSubSetting=='Primary Button Color' && showBackgroundColorPicker == true && (
                                 <Col xs={9}>
                                 <PhotoshopPicker 

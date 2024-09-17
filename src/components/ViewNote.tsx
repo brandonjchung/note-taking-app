@@ -10,7 +10,7 @@ type NoteProps = {
     siteStyles: siteStyles
 }
 
-export function Note({ onDeleteNote, siteStyles }: NoteProps) {
+export function ViewNote({ onDeleteNote, siteStyles }: NoteProps) {
     const note = useNote()
     const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ export function Note({ onDeleteNote, siteStyles }: NoteProps) {
                 <Stack gap={2} direction="horizontal">
                     <Link to={`/${note.id}/edit`}>
                         <Button 
-                            style={{ backgroundColor: siteStyles.primary, borderColor: siteStyles.primary, color: siteStyles.label}}
+                            style={{ backgroundColor: siteStyles.primary, borderColor: siteStyles.primary, color: siteStyles.label }}
                             className={globalStyle.button}>
                             Edit
                         </Button>
@@ -46,7 +46,7 @@ export function Note({ onDeleteNote, siteStyles }: NoteProps) {
                     </Button>
                     <Link to="/">
                         <Button 
-                            style={{ backgroundColor: siteStyles.secondary, borderColor: siteStyles.secondary, color: siteStyles.label}}
+                            style={{ backgroundColor: siteStyles.secondary, borderColor: siteStyles.secondary, color: siteStyles.label }}
                             className={globalStyle.button}>
                             Back
                         </Button>
@@ -54,6 +54,18 @@ export function Note({ onDeleteNote, siteStyles }: NoteProps) {
                 </Stack>
             </Col>
         </Row>
-        <ReactMarkdown>{note.markdown}</ReactMarkdown>
+        <ReactMarkdown components={{
+            ul(props) {
+            const {node, ...rest} = props
+            return <ul style={{ backgroundColor: siteStyles.note, margin: '0px', color: siteStyles.label }} {...rest} />
+            },
+            
+            p(props) {
+            const {node, ...rest} = props
+            return <ul style={{ backgroundColor: siteStyles.note, margin: '0px', color: siteStyles.label }} {...rest} />
+            }
+        }}>
+            {note.markdown}
+        </ReactMarkdown>
     </>
 }

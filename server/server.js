@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import notes from "./routes/note.js"
-import tags from "./routes/note.js"
+import tags from "./routes/tag.js"
 
 const PORT = process.env.PORT || 5050;
 const app = express();

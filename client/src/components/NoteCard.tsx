@@ -8,7 +8,7 @@ import styles from "./NoteCard.module.css"
 type NoteCardProps = {
     id: string,
     title: string,
-    tags: Tag[]
+    tags: Tag[],
     siteStyles: siteStyles
 }
 

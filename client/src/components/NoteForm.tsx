@@ -1,6 +1,6 @@
 import { Form, Stack, Row, Col, Button } from "react-bootstrap"
 import { siteStyles } from "../interfaces/siteStyles"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { FormEvent, useRef } from "react"
 import { NoteData, Tag } from "../App"
 import { useState } from "react"
@@ -10,16 +10,17 @@ import globalStyle from "../assets/global.module.css"
 
 type NoteFormProps = {
     onSubmit: (data: NoteData) => void
-    onAddTag: (data: Tag) => void
+    onDeleteNote: (id: string) => void
+    onAddTag: (data: string) => void
     availableTags: Tag[]
     siteStyles: siteStyles
 } & Partial<NoteData>
 
-export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title="", markdown = "", tags = [] } : NoteFormProps) {
-    const titleRef = useRef<HTMLInputElement>(null)
-    const markdownRef = useRef<HTMLTextAreaElement>(null)
+export function NoteForm({ onSubmit, onDeleteNote, onAddTag, availableTags, siteStyles, title="", markdown = "", tags = [] } : NoteFormProps) {
     const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
-    const navigate = useNavigate()
+    const markdownRef = useRef<HTMLTextAreaElement>(null)
+    const titleRef = useRef<HTMLInputElement>(null)
+    const params = useParams();
     
     const siteStyledTextBoxes = {
         backgroundColor: siteStyles.note, 
@@ -35,8 +36,6 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title=
             markdown: markdownRef.current!.value,
             tags: selectedTags
         })
-
-        navigate("..")
     }
 
     return (
@@ -91,9 +90,7 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title=
                                     }),
                                 }}
                                 onCreateOption={label => {
-                                    const newTag = {label}
-                                    onAddTag(newTag)
-                                    setSelectedTags(prev => [...prev, newTag])
+                                    onAddTag(label)
                                 }}
                                 options={availableTags.map(tag => {
                                     return {label: tag.label, value: tag._id}
@@ -124,7 +121,17 @@ export function NoteForm({ onSubmit, onAddTag, availableTags, siteStyles, title=
                         className={globalStyle.button} 
                         type="submit" >
                         Save
+                    </Button>
+                    { params.id != null && (
+                        <Button 
+                            onClick={() => {
+                                onDeleteNote(params.id == null ? '' : params.id);
+                            }}   
+                            className={globalStyle.button}
+                            variant="outline-danger">
+                            Delete
                         </Button>
+                    )}
                     <Link to="..">
                         <Button 
                             style={{ background: siteStyles.secondary, borderColor: siteStyles.secondary, color:siteStyles.label }}

@@ -1,5 +1,5 @@
 import { Row, Col, Badge, Stack, Button } from "react-bootstrap"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { siteStyles } from "../interfaces/siteStyles"
 import { useNote } from "./NoteLayout"
 
@@ -13,7 +13,6 @@ type NoteProps = {
 
 export function ViewNote({ onDeleteNote, siteStyles }: NoteProps) {
     const note = useNote()
-    const navigate = useNavigate();
 
     return <>
         <Row className="align-items-center mb-4">
@@ -39,7 +38,6 @@ export function ViewNote({ onDeleteNote, siteStyles }: NoteProps) {
                     <Button 
                         onClick={() => {
                             onDeleteNote(note._id);
-                            navigate("/")
                         }}   
                         className={globalStyle.button}
                         variant="outline-danger">

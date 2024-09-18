@@ -1,15 +1,15 @@
-import { RawNote, RawNoteData } from "../App";
+import { Tag } from "../App";
 
-export const createNote = async ( note : RawNoteData ) => {
-    const response = await fetch(`http://localhost:5050/note/`, {
+export const createTag = async ( label : string ) => {
+    const response = await fetch(`http://localhost:5050/tag/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(note)
+        body: JSON.stringify(label)
     });
 
-    const noteData = await response.json();
+    const tagData = await response.json();
 
     if(!response.ok) {
         const message = `An error occurred: ${response.status}`;
@@ -17,12 +17,12 @@ export const createNote = async ( note : RawNoteData ) => {
         return null;
     }
     else{
-        return noteData.insertedId;
+        return tagData.insertedId;
     }
 }
 
-export const getNotes = async () => {
-    const response = await fetch(`http://localhost:5050/note/`);
+export const getTags = async () => {
+    const response = await fetch(`http://localhost:5050/tag/`);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -30,20 +30,19 @@ export const getNotes = async () => {
         return null;
     }
 
-    const noteData = await response.json();
+    const tagData = await response.json();
 
-    return noteData;
+    return tagData;
 }
 
-export const updateNote = async ( note : RawNote ) => {
-    const response = await fetch(`http://localhost:5050/note/${note._id}`, {
+export const updateTag = async ( tag : Tag ) => {
+    const response = await fetch(`http://localhost:5050/tag/${tag._id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(note)
+        body: JSON.stringify(tag)
     });
-    console.log(response);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.status}`;
@@ -56,8 +55,8 @@ export const updateNote = async ( note : RawNote ) => {
     }
 }
 
-export const deleteNote = async ( id: string ) => {
-    const response = await fetch(`http://localhost:5050/note/${id}`, {
+export const deleteTag = async ( id: string ) => {
+    const response = await fetch(`http://localhost:5050/tag/${id}`, {
         method: "DELETE",
     });
 

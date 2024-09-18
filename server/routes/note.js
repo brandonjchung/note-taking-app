@@ -62,6 +62,7 @@ router.patch("/:id", async (req, res) => {
         let collection = db.collection("notes");
 
         let result = await collection.updateOne(query, updates);
+        console.log(result);
 
         res.send(result).status(200);
     } catch(err) {

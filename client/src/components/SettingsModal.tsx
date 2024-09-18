@@ -16,7 +16,6 @@ type SettingsModalProps = {
     setModalIsOpen: (state: boolean) => void
 }
 
-// move this outside when you have a chance
 export function SettingsModal( props : SettingsModalProps ) {
     interface colorObj {
         hex: string
@@ -54,6 +53,20 @@ export function SettingsModal( props : SettingsModalProps ) {
     };
     const handleSubtheme = ( currSubSetting: string ) => {
         setCurrSubSetting(currSubSetting);
+
+        switch(currSubSetting){
+            case 'Background Color':
+                return setCurrColor(props.siteStyles.background);
+            case 'Note Color':
+                return setCurrColor(props.siteStyles.note);
+            case 'Primary Button Color':
+                return setCurrColor(props.siteStyles.primary);
+            case 'Secondary Button Color':
+                return setCurrColor(props.siteStyles.secondary);
+            case 'Label':
+                return setCurrColor(props.siteStyles.label);
+        }
+
         if(currSubSetting == 'Background Color'){
             setCurrColor(props.siteStyles.background);
         }

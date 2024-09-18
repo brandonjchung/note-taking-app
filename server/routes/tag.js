@@ -31,9 +31,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         let newTag = {
-            title: req.body.title,
-            markdown: req.body.markdown,
-            tags: req.body.tags,
+            label: req.body.label,
         };
 
         let collection = db.collection("tags");
@@ -53,10 +51,7 @@ router.patch("/:id", async (req, res) => {
         const query = { _id: new ObjectId(req.params.id) };
         const updates = {
             $set: {
-                _id: req.body._id,
-                title: req.body.title,
-                markdown: req.body.markdown,
-                tags: req.body.tags,
+                label: req.body.label,
             }
         };
 
@@ -78,7 +73,7 @@ router.delete("/:id", async (req, res) => {
         
         let collection = db.collection("tags");
 
-        let result = await collection.deleteOne(query, updates);
+        let result = await collection.deleteOne(query);
 
         res.send(result).status(200);
     } catch(err) {

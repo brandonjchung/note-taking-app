@@ -1,41 +1,73 @@
+import { Dispatch, SetStateAction, useState, FormEvent, useRef } from "react"
 import { Form, Stack, Row, Col, Button } from "react-bootstrap"
-import { siteStyles } from "../interfaces/siteStyles"
+import { onCreateNote, onEditNote, onDeleteNote } from "../helper/note_util"
+import { NoteData, Tag, RawNote } from "../App"
 import { Link, useParams } from "react-router-dom"
-import { FormEvent, useRef } from "react"
-import { NoteData, Tag } from "../App"
-import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { siteStyles } from "../interfaces/siteStyles"
+import { onAddTag } from "../helper/tag_util"
 
 import CreatableReactSelect from "react-select/creatable"
 import globalStyle from "../assets/global.module.css"
 
 type NoteFormProps = {
-    onSubmit: (data: NoteData) => void
-    onDeleteNote: (id: string) => void
-    onAddTag: (data: string) => void
-    availableTags: Tag[]
+    setNotes: Dispatch<SetStateAction<RawNote[]>>, 
+    setTags: Dispatch<SetStateAction<Tag[]>>,
+    availableTags: Tag[],
     siteStyles: siteStyles
 } & Partial<NoteData>
 
-export function NoteForm({ onSubmit, onDeleteNote, onAddTag, availableTags, siteStyles, title="", markdown = "", tags = [] } : NoteFormProps) {
+export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="", markdown = "", tags = [] } : NoteFormProps) {
     const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
     const markdownRef = useRef<HTMLTextAreaElement>(null)
     const titleRef = useRef<HTMLInputElement>(null)
     const params = useParams();
-    
+    const nav = useNavigate();
+
     const siteStyledTextBoxes = {
         backgroundColor: siteStyles.note, 
         borderColor: siteStyles.note, 
         color: siteStyles.label
     }
+    const siteStyledTags = {
+        backgroundColor: siteStyles.background, 
+        borderColor: siteStyles.note, 
+        color: siteStyles.label,
+        borderRadius: "3px"
+    }
     
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
-        onSubmit({
-            title: titleRef.current!.value,
-            markdown: markdownRef.current!.value,
-            tags: selectedTags
-        })
+        if(params.id){
+            const id = params.id;
+            const noteData = {
+                noteDataProps: {
+                    title: titleRef.current!.value,
+                    markdown: markdownRef.current!.value,
+                    tags: selectedTags
+                },
+                setNotes, 
+                nav,
+                id
+            };
+    
+            onEditNote(noteData);
+
+        }
+        else{
+            const noteData = {
+                noteDataProps: {
+                    title: titleRef.current!.value,
+                    markdown: markdownRef.current!.value,
+                    tags: selectedTags
+                },
+                setNotes, 
+                nav
+            };
+    
+            onCreateNote(noteData);
+        }
     }
 
     return (
@@ -74,11 +106,15 @@ export function NoteForm({ onSubmit, onDeleteNote, onAddTag, availableTags, site
                                     }),
                                     multiValue: (baseStyles) => ({
                                     ...baseStyles,
-                                    ...siteStyledTextBoxes
+                                    ...siteStyledTags
                                     }),
                                     multiValueLabel: (baseStyles) => ({
                                     ...baseStyles,
-                                    ...siteStyledTextBoxes
+                                    ...siteStyledTags
+                                    }),
+                                    multiValueRemove: (baseStyles) => ({
+                                    ...baseStyles,
+                                    ...siteStyledTags
                                     }),
                                     indicatorSeparator: (baseStyles) => ({
                                     ...baseStyles,
@@ -90,7 +126,17 @@ export function NoteForm({ onSubmit, onDeleteNote, onAddTag, availableTags, site
                                     }),
                                 }}
                                 onCreateOption={label => {
-                                    onAddTag(label)
+                                    onAddTag({label, setTags}).then((tagData: void | Tag[]) => {
+                                        if(tagData != null){
+                                            setSelectedTags(prevTags => {
+                                                const newTag = tagData.find(tag => tag.label == label);
+                                                if(newTag != null){
+                                                    return [...prevTags, newTag];
+                                                }
+                                                return [...prevTags];
+                                            })
+                                        }
+                                    })
                                 }}
                                 options={availableTags.map(tag => {
                                     return {label: tag.label, value: tag._id}
@@ -125,7 +171,15 @@ export function NoteForm({ onSubmit, onDeleteNote, onAddTag, availableTags, site
                     { params.id != null && (
                         <Button 
                             onClick={() => {
-                                onDeleteNote(params.id == null ? '' : params.id);
+                                const id = params.id;
+                                if(id){
+                                    const onDeleteNotesProps = {
+                                        setNotes,
+                                        id, 
+                                        nav
+                                    }
+                                    onDeleteNote(onDeleteNotesProps);
+                                }
                             }}   
                             className={globalStyle.button}
                             variant="outline-danger">

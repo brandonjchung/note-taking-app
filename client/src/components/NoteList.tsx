@@ -1,23 +1,25 @@
 import { Form, Row, Col, Stack, Button, Modal } from "react-bootstrap"
 import { siteStyles } from "../interfaces/siteStyles"
+import { Dispatch, SetStateAction } from "react"
 import { Link } from "react-router-dom"
 import { NoteCard } from "./NoteCard"
 import { Tag, Note } from "../App"
 import { useState } from "react"
 import { useMemo } from "react"
 
+import { onUpdateTag, onDeleteTag } from "../helper/tag_util"
+
 import globalStyle from "../assets/global.module.css"
 import ReactSelect from "react-select"
 
 type NoteListProps = {
-    availableTags: Tag[]
-    notes: Note[]
-    onDeleteTag: (id: string) => void
-    onUpdateTag: (data: Tag) => void
+    availableTags: Tag[],
+    notes: Note[],
+    setTags: Dispatch<SetStateAction<Tag[]>>,
     siteStyles: siteStyles
 }
 
-export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteStyles } : NoteListProps) {
+export function NoteList({ availableTags, notes, setTags, siteStyles } : NoteListProps) {
     const [selectedTags, setSelectedTags] = useState<Tag[]>([])
     const [title, setTitle] = useState("")
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -33,6 +35,12 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
         backgroundColor: siteStyles.note, 
         borderColor: siteStyles.note, 
         color: siteStyles.label
+    }
+    const siteStyledTags = {
+        backgroundColor: siteStyles.background, 
+        borderColor: siteStyles.note, 
+        color: siteStyles.label,
+        borderRadius: "3px"
     }
 
     return <>
@@ -93,6 +101,18 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
                                 ...baseStyles,
                                 ...siteStyledTextBoxes
                                 }),
+                                multiValue: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTags,
+                                }),
+                                multiValueLabel: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTags
+                                }),
+                                multiValueRemove: (baseStyles) => ({
+                                ...baseStyles,
+                                ...siteStyledTags
+                                }),
                             }}
                             options={availableTags.map(tag => {
                                 return {label: tag.label, value: tag._id}
@@ -120,8 +140,7 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
         <EditTagsModal 
             availableTags={availableTags} 
             show={modalIsOpen}
-            onDeleteTag={onDeleteTag} 
-            onUpdateTag={onUpdateTag}
+            setTags={setTags} 
             handleClose={() => setModalIsOpen(false)}
             siteStyles={siteStyles}
         />
@@ -131,13 +150,12 @@ export function NoteList({ availableTags, notes, onDeleteTag, onUpdateTag, siteS
 type EditTagsModalProps = {
     availableTags: Tag[],
     show: boolean,
-    onDeleteTag: (id: string) => void
-    onUpdateTag: (data: Tag) => void
+    setTags: Dispatch<SetStateAction<Tag[]>>,
     handleClose: () => void
     siteStyles: siteStyles
 }
 
-function EditTagsModal({ availableTags, show, onDeleteTag, onUpdateTag, handleClose, siteStyles }: EditTagsModalProps) {
+function EditTagsModal({ availableTags, show, setTags, handleClose, siteStyles }: EditTagsModalProps) {
     return <Modal show={show} onHide={handleClose}>
         <Modal.Header  style={{ background: siteStyles.background, color: siteStyles.label}} closeButton>
             <Modal.Title>Edit Tags</Modal.Title>
@@ -148,10 +166,26 @@ function EditTagsModal({ availableTags, show, onDeleteTag, onUpdateTag, handleCl
                     {availableTags.map(tag => (
                         <Row key={tag._id}>
                             <Col className="col-6">
-                                <Form.Control type="text" value={tag.label} onChange={e => onUpdateTag({_id: tag._id, label: e.target.value})}></Form.Control>
+                                <Form.Control type="text" value={tag.label} onChange={e => {
+                                    const updateTagProps = {
+                                        data: {
+                                            _id: tag._id,
+                                            label: e.target.value
+                                        },
+                                        setTags
+                                    }
+                                    onUpdateTag(updateTagProps)
+                                }}></Form.Control>
                             </Col>
                             <Col>
-                                <Button onClick={() => onDeleteTag(tag._id)} variant="outline-danger">&times;</Button>
+                                <Button 
+                                    onClick={() => {
+                                        const id = tag._id;
+                                        onDeleteTag({id, setTags})
+                                    }} 
+                                    variant="outline-danger">
+                                    &times;
+                                </Button>
                             </Col>
                         </Row>
                     ))}

@@ -1,17 +1,17 @@
 import { siteStyles } from "../interfaces/siteStyles"
-import { NoteData, Tag } from "../App"
+import { Dispatch, SetStateAction } from "react"
+import { RawNote, Tag } from "../App"
 import { NoteForm } from "./NoteForm"
 import { useNote } from "./NoteLayout"
 
 type EditNoteProps = {
-    onSubmit: (id: string, data: NoteData) => void
-    onDeleteNote: (id: string) => void
-    onAddTag: (data: string) => void
+    setNotes: Dispatch<SetStateAction<RawNote[]>>, 
+    setTags: Dispatch<SetStateAction<Tag[]>>,
     availableTags: Tag[]
     siteStyles: siteStyles
 }
 
-export function EditNote({ onSubmit, onDeleteNote, onAddTag, availableTags, siteStyles } : EditNoteProps){
+export function EditNote({ setNotes, setTags, availableTags, siteStyles } : EditNoteProps){
     const note = useNote()
     return (
         <>
@@ -20,9 +20,8 @@ export function EditNote({ onSubmit, onDeleteNote, onAddTag, availableTags, site
                 title={note.title}
                 markdown={note.markdown}
                 tags={note.tags}
-                onSubmit={(data) => onSubmit(note._id, data)} 
-                onDeleteNote={onDeleteNote} 
-                onAddTag={onAddTag} 
+                setNotes={setNotes} 
+                setTags={setTags} 
                 siteStyles={siteStyles}
                 availableTags={availableTags}
             />

@@ -1,18 +1,29 @@
 import { Row, Col, Badge, Stack, Button } from "react-bootstrap"
-import { Link } from "react-router-dom"
 import { siteStyles } from "../interfaces/siteStyles"
+import { Link, useNavigate } from "react-router-dom"
+import { onDeleteNote } from "../helper/note_util"
+import { Dispatch, SetStateAction } from "react"
 import { useNote } from "./NoteLayout"
+import { RawNote } from "../App"
 
 import globalStyle from '../assets/global.module.css'
 import ReactMarkdown from "react-markdown"
 
 type NoteProps = {
-    onDeleteNote: (id: string) => void
+    setNotes: Dispatch<SetStateAction<RawNote[]>>, 
     siteStyles: siteStyles
 }
 
-export function ViewNote({ onDeleteNote, siteStyles }: NoteProps) {
-    const note = useNote()
+export function ViewNote({ setNotes, siteStyles }: NoteProps) {
+    const nav = useNavigate();
+    const note = useNote();
+    
+    const id = note._id;
+    const onDeleteNotesProps = {
+        setNotes,
+        id, 
+        nav
+    }
 
     return <>
         <Row className="align-items-center mb-4">
@@ -37,7 +48,7 @@ export function ViewNote({ onDeleteNote, siteStyles }: NoteProps) {
                     </Link>
                     <Button 
                         onClick={() => {
-                            onDeleteNote(note._id);
+                            onDeleteNote(onDeleteNotesProps);
                         }}   
                         className={globalStyle.button}
                         variant="outline-danger">

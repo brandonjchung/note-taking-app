@@ -6,7 +6,7 @@ export const createTag = async ( label : string ) => {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(label)
+        body: JSON.stringify({label: label})
     });
 
     const tagData = await response.json();

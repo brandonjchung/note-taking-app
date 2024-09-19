@@ -30,6 +30,7 @@ router.get("/:id", async (req, res) => {
 // create new Tag
 router.post("/", async (req, res) => {
     try {
+        console.log(req);
         let newTag = {
             label: req.body.label,
         };

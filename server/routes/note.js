@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
         let newNote = {
             title: req.body.title,
             markdown: req.body.markdown,
-            tags: req.body.tags,
+            tagIds: req.body.tagIds,
         };
 
         let collection = db.collection("notes");
@@ -55,7 +55,7 @@ router.patch("/:id", async (req, res) => {
             $set: {
                 title: req.body.title,
                 markdown: req.body.markdown,
-                tags: req.body.tags,
+                tagIds: req.body.tagIds,
             }
         };
 

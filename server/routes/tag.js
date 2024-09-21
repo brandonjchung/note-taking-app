@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-// get all tags
+// get all Tags
 router.get("/", async (req, res) => {
     let collection = db.collection("tags");
 
@@ -27,10 +27,26 @@ router.get("/:id", async (req, res) => {
     else res.send(result).status(200);
 })
 
+// create new Tags
+router.post("/many", async (req, res) => {
+    try {
+
+        let collection = db.collection("tags");
+
+        const newTags = req.body.labels.map((label) => { return { label: label }})
+
+        let result = await collection.insertMany(newTags);
+
+        res.send(result).status(204);
+    } catch(err) {
+        console.log(err);
+        res.status(500).send("Error creating record");
+    }
+})
+
 // create new Tag
 router.post("/", async (req, res) => {
     try {
-        console.log(req);
         let newTag = {
             label: req.body.label,
         };
@@ -46,10 +62,35 @@ router.post("/", async (req, res) => {
     }
 })
 
+// updates a group of Tags
+router.patch("/many", async (req, res) => {
+    try {
+        console.log(req.body);
+        const bulkOperation = req.body.tags.map((tag) => {
+            return {
+                updateMany: {
+                    filter: { _id: new ObjectId(String(tag._id)) },
+                    update: { $set: { label: tag.label } }
+                }
+            }
+        });
+
+        let collection = db.collection("tags");
+
+        let result = await collection.bulkWrite(bulkOperation);
+
+        res.send(result).status(200);
+    } catch(err) {
+        console.log(err);
+        res.status(500).send("Error updating record");
+    }
+})
+
 // update a Tag
 router.patch("/:id", async (req, res) => {
     try {
         const query = { _id: new ObjectId(req.params.id) };
+
         const updates = {
             $set: {
                 label: req.body.label,
@@ -64,6 +105,26 @@ router.patch("/:id", async (req, res) => {
     } catch(err) {
         console.log(err);
         res.status(500).send("Error updating record");
+    }
+})
+
+// delete a group of Tags
+router.delete("/many", async (req, res) => {
+    try {
+        const idsToDelete = req.body.ids.map((id) => {
+            return new ObjectId((String(id)));
+        })
+
+        const query = { _id: { $in: idsToDelete } };
+        
+        let collection = db.collection("tags");
+
+        let result = await collection.deleteMany(query);
+
+        res.send(result).status(200);
+    } catch(err) {
+        console.log(err);
+        res.status(500).send("Error deleting record");
     }
 })
 

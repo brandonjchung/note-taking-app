@@ -75,7 +75,7 @@ function App() {
                 setTags(tagData);
             }
         });
-    }, [backgroundColor, notes.length]);
+    }, [backgroundColor, notes.length, tags.length]);
 
     const notesWithTags = useMemo(() => {
         return notes.map(note => {

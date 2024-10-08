@@ -1,4 +1,4 @@
-import { Form, Modal, Col, Row, Button, ButtonGroup } from "react-bootstrap"
+import { Button, ButtonGroup, Col, Form, Modal, Row  } from "react-bootstrap"
 import { siteStyles } from "../interfaces/siteStyles";
 import { PhotoshopPicker  } from "react-color" 
 import { useState } from "react";
@@ -19,15 +19,13 @@ type SettingsModalProps = {
 export function SettingsModal( props : SettingsModalProps ) {
     interface colorObj {
         hex: string
-    }
+    };
 
     const [currSetting, setCurrSetting] = useState('profile');
     const [currSubSetting, setCurrSubSetting] = useState('Background Color');
     const [currColor, setCurrColor] = useState(props.siteStyles.background);
-    const [showBackgroundColorPicker, setShowBackgroundColorPicker] = useState(true);
 
     const handleAccept = ( currSubSetting: string ) => {
-        
         if(currSubSetting == 'Background Color'){
             props.setBackgroundColor(currColor);
         }
@@ -45,12 +43,27 @@ export function SettingsModal( props : SettingsModalProps ) {
         }
         // try like event stop propogationn or something here
     };
+
     const handleChange = (color: colorObj) => {
         setCurrColor(color.hex);
     };
+
     const handleCancel = () => {
-        setShowBackgroundColorPicker(false);
+        // setShowBackgroundColorPicker(false);
+        switch(currSubSetting){
+            case 'Background Color':
+                return setCurrColor(props.siteStyles.background);
+            case 'Note Color':
+                return setCurrColor(props.siteStyles.note);
+            case 'Primary Button Color':
+                return setCurrColor(props.siteStyles.primary);
+            case 'Secondary Button Color':
+                return setCurrColor(props.siteStyles.secondary);
+            case 'Label':
+                return setCurrColor(props.siteStyles.label);
+        }
     };
+
     const handleSubtheme = ( currSubSetting: string ) => {
         setCurrSubSetting(currSubSetting);
 
@@ -66,38 +79,22 @@ export function SettingsModal( props : SettingsModalProps ) {
             case 'Label':
                 return setCurrColor(props.siteStyles.label);
         }
-
-        if(currSubSetting == 'Background Color'){
-            setCurrColor(props.siteStyles.background);
-        }
-        else if(currSubSetting == 'Note Color'){
-            setCurrColor(props.siteStyles.note);
-        }
-        else if(currSubSetting == 'Primary Button Color'){
-            setCurrColor(props.siteStyles.primary);
-        }
-        else if(currSubSetting == 'Secondary Button Color'){
-            setCurrColor(props.siteStyles.secondary);
-        }
-        else if(currSubSetting == 'Label'){
-            setCurrColor(props.siteStyles.label);
-        }
-    }
+    };
 
     const primaryStyleProps = {
         background: props.siteStyles.primary, 
         borderColor: props.siteStyles.primary, 
         color:props.siteStyles.label,
-    }
+    };
+    
     const secondaryStyleProps = {
         background: props.siteStyles.secondary, 
         borderColor: props.siteStyles.secondary, 
         color:props.siteStyles.label,
-    }
+    };
 
     return <Modal size="xl" show={props.show} onHide={() => {props.setModalIsOpen(false)}} centered>
-        <Modal.Header style={{ background: props.siteStyles.background }} closeButton>
-        </Modal.Header>
+        <Modal.Header style={{ background: props.siteStyles.background }} closeButton></Modal.Header>
         <Modal.Body style={{ background: props.siteStyles.background, color: props.siteStyles.label, height: window.innerHeight*.6 }} >
             <Form>
                 <Row>
@@ -166,7 +163,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                                 
                             )}
                             {/* Refactor later: can't diagnose why current color doesn't update upon rerender, temporary suboptimal solution */}
-                            {/* {currSetting=='themes' && showBackgroundColorPicker == true && (
+                            {/* {currSetting=='themes' && (
                                 <Col xs={9}>
                                 <PhotoshopPicker 
                                     className={styles.photoshopPicker}
@@ -178,7 +175,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                                 />
                                 </Col>
                             )}  */}
-                            {currSetting=='themes' && currSubSetting=='Background Color' && showBackgroundColorPicker == true && (
+                            {currSetting=='themes' && currSubSetting=='Background Color' && (
                                 <Col xs={9}>
                                 <PhotoshopPicker 
                                     className={styles.photoshopPicker}
@@ -190,7 +187,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                                 />
                                 </Col>
                             )} 
-                            {currSetting=='themes' && currSubSetting=='Note Color' && showBackgroundColorPicker == true && (
+                            {currSetting=='themes' && currSubSetting=='Note Color' && (
                                 <Col xs={9}>
                                 <PhotoshopPicker 
                                     className={styles.photoshopPicker}
@@ -202,7 +199,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                                 />
                                 </Col>
                             )}
-                            {currSetting=='themes' && currSubSetting=='Primary Button Color' && showBackgroundColorPicker == true && (
+                            {currSetting=='themes' && currSubSetting=='Primary Button Color' && (
                                 <Col xs={9}>
                                 <PhotoshopPicker 
                                     className={styles.photoshopPicker}
@@ -214,7 +211,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                                 />
                                 </Col>
                             )}
-                            {currSetting=='themes' && currSubSetting=='Secondary Button Color' && showBackgroundColorPicker == true && (
+                            {currSetting=='themes' && currSubSetting=='Secondary Button Color' && (
                                 <Col xs={9}>
                                 <PhotoshopPicker 
                                     className={styles.photoshopPicker}
@@ -226,7 +223,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                                 />
                                 </Col>
                             )}
-                            {currSetting=='themes' && currSubSetting=='Label' && showBackgroundColorPicker == true && (
+                            {currSetting=='themes' && currSubSetting=='Label' && (
                                 <Col xs={9}>
                                 <PhotoshopPicker 
                                     className={styles.photoshopPicker}

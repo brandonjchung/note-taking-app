@@ -1,0 +1,1 @@
+From the root directory run npm run dev to begin both client and server side processes.

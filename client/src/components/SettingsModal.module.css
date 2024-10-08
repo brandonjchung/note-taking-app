@@ -11,3 +11,7 @@
     box-sizing: border-box !important;
     width: 100% !important;
 }
+
+div.modal-body {
+    color:black !important;
+}

@@ -5,7 +5,7 @@ import { NoteData, Tag, RawNote } from "../App"
 import { Link, useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { siteStyles } from "../interfaces/siteStyles"
-import { onAddTag } from "../helper/tag_util"
+import { onCreateTag } from "../helper/tag_util"
 
 import CreatableReactSelect from "react-select/creatable"
 import globalStyle from "../assets/global.module.css"
@@ -88,45 +88,18 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                             */}
                             <CreatableReactSelect 
                                 styles={{
-                                    control: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTextBoxes
-                                    }),
-                                    menu: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTextBoxes
-                                    }),
-                                    input: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTextBoxes
-                                    }),
-                                    noOptionsMessage: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTextBoxes
-                                    }),
-                                    multiValue: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTags
-                                    }),
-                                    multiValueLabel: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTags
-                                    }),
-                                    multiValueRemove: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTags
-                                    }),
-                                    indicatorSeparator: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTextBoxes
-                                    }),
-                                    option: (baseStyles) => ({
-                                    ...baseStyles,
-                                    ...siteStyledTextBoxes
-                                    }),
+                                    control: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
+                                    menu: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
+                                    input: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
+                                    noOptionsMessage: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
+                                    multiValue: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),
+                                    multiValueLabel: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),
+                                    multiValueRemove: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),
+                                    indicatorSeparator: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
+                                    option: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 }}
                                 onCreateOption={label => {
-                                    onAddTag({label, setTags}).then((tagData: void | Tag[]) => {
+                                    onCreateTag({label, setTags}).then((tagData: void | Tag[]) => {
                                         if(tagData != null){
                                             setSelectedTags(prevTags => {
                                                 const newTag = tagData.find(tag => tag.label == label);
@@ -186,7 +159,7 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                             Delete
                         </Button>
                     )}
-                    <Link to="..">
+                    <Link to="/">
                         <Button 
                             style={{ background: siteStyles.secondary, borderColor: siteStyles.secondary, color:siteStyles.label }}
                             type="button" 

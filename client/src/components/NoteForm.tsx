@@ -1,13 +1,15 @@
 import { Dispatch, SetStateAction, useState, FormEvent, useRef } from "react"
 import { Form, Stack, Row, Col, Button } from "react-bootstrap"
+import { Link, useParams, useNavigate } from "react-router-dom"
+import CreatableReactSelect from "react-select/creatable"
+
 import { onCreateNote, onEditNote, onDeleteNote } from "../helper/note_util"
-import { NoteData, Tag, RawNote } from "../App"
-import { Link, useParams } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
-import { siteStyles } from "../interfaces/siteStyles"
 import { onCreateTag } from "../helper/tag_util"
 
-import CreatableReactSelect from "react-select/creatable"
+import { NoteData, RawNote } from "../types/notes"
+import { siteStyles } from "../types/siteStyles"
+import { Tag } from "../types/tag"
+
 import globalStyle from "../assets/global.module.css"
 
 type NoteFormProps = {

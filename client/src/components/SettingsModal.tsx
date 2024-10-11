@@ -1,7 +1,8 @@
 import { Button, ButtonGroup, Col, Form, Modal, Row  } from "react-bootstrap"
-import { siteStyles } from "../interfaces/siteStyles";
 import { PhotoshopPicker  } from "react-color" 
 import { useState } from "react";
+
+import { siteStyles } from "../types/siteStyles";
 
 import styles from './SettingsModal.module.css'
 

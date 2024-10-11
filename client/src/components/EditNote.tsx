@@ -1,6 +1,9 @@
-import { siteStyles } from "../interfaces/siteStyles"
 import { Dispatch, SetStateAction } from "react"
-import { RawNote, Tag } from "../App"
+
+import { siteStyles } from "../types/siteStyles"
+import { RawNote } from "../types/notes"
+import { Tag } from "../types/tag"
+
 import { NoteForm } from "./NoteForm"
 import { useNote } from "./NoteLayout"
 

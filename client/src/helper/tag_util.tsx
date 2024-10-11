@@ -1,12 +1,13 @@
 import { createTag, createTags, getTags, updateTag, updateTags, deleteTag, deleteTags } from "../api/tagsApi"
 import { Dispatch, SetStateAction } from "react"
-import { Tag } from "../App";
+import { Tag } from "../types/tag";
 
 type onCreateTagProps = {
     label: string, 
     setTags: Dispatch<SetStateAction<Tag[]>>
 }
 
+// refactor later into just the api
 export async function onCreateTag({ label, setTags }: onCreateTagProps){
     const res = await createTag(label);
     if(res){

@@ -1,13 +1,16 @@
 import { Row, Col, Badge, Stack, Button } from "react-bootstrap"
-import { siteStyles } from "../interfaces/siteStyles"
 import { Link, useNavigate } from "react-router-dom"
-import { onDeleteNote } from "../helper/note_util"
 import { Dispatch, SetStateAction } from "react"
+import ReactMarkdown from "react-markdown"
+
+import { onDeleteNote } from "../helper/note_util"
+
 import { useNote } from "./NoteLayout"
-import { RawNote } from "../App"
+
+import { siteStyles } from "../types/siteStyles"
+import { RawNote } from "../types/notes"
 
 import globalStyle from '../assets/global.module.css'
-import ReactMarkdown from "react-markdown"
 
 type NoteProps = {
     setNotes: Dispatch<SetStateAction<RawNote[]>>, 
@@ -66,12 +69,12 @@ export function ViewNote({ setNotes, siteStyles }: NoteProps) {
         </Row>
         <ReactMarkdown components={{
             ul(props) {
-                const {node, ...rest} = props
+                const {node, ...rest} = props;
                 return <ul style={{ backgroundColor: siteStyles.note, margin: '0px', color: siteStyles.label }} {...rest} />
             },
             
             p(props) {
-                const {node, ...rest} = props
+                const {node, ...rest} = props;
                 return <ul style={{ backgroundColor: siteStyles.note, margin: '0px', color: siteStyles.label }} {...rest} />
             }
         }}>

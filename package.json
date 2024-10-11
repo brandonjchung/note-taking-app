@@ -3,9 +3,12 @@
     "private": true,
     "version": "1.0.0",
     "scripts": {
-      "dev": "concurrently \"cd server && node --env-file=config.env server\" \"cd client && npm run dev\""
+        "dev": "concurrently \"cd server && node --env-file=config.env server\" \"cd client && npm run dev\""
     },
     "devDependencies": {
-      "concurrently": "^7.0.0"
+        "concurrently": "^7.0.0"
+    },
+    "dependencies": {
+        "bcrypt": "^5.1.1"
     }
-  }
+}

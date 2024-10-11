@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
 
         let result = await collection.insertOne(newNote);
 
-        res.send(result).status(204);
+        res.status(204).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");
@@ -64,7 +64,7 @@ router.patch("/:id", async (req, res) => {
         let result = await collection.updateOne(query, updates);
         console.log(result);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error updating record");
@@ -80,7 +80,7 @@ router.delete("/:id", async (req, res) => {
 
         let result = await collection.deleteOne(query);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error deleting record");

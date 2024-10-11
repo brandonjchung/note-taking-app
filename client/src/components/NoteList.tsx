@@ -1,15 +1,17 @@
+import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react"
 import { onCreateTags, onUpdateTags, onDeleteTags } from "../helper/tag_util"
 import { Form, Row, Col, Stack, Button, Modal } from "react-bootstrap"
-import { Dispatch, SetStateAction, useEffect } from "react"
-import { siteStyles } from "../interfaces/siteStyles"
 import { Link } from "react-router-dom"
 import { NoteCard } from "./NoteCard"
-import { Tag, Note } from "../App"
-import { useState } from "react"
-import { useMemo } from "react"
+
+import ReactSelect from "react-select"
+
+import { siteStyles } from "../types/siteStyles"
+import { Note } from "../types/notes"
+import { Tag } from "../types/tag"
+
 
 import globalStyle from "../assets/global.module.css"
-import ReactSelect from "react-select"
 
 type NoteListProps = {
     availableTags: Tag[],

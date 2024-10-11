@@ -1,7 +1,8 @@
-import { siteStyles } from "../interfaces/siteStyles"
 import { Card, Stack, Badge } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import { Tag } from "../App"
+
+import { siteStyles } from "../types/siteStyles"
+import { Tag } from "../types/tag"
 
 import styles from "./NoteCard.module.css"
 

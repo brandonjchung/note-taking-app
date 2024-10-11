@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 
     let results = await collection.find({}).toArray();
 
-    res.send(results).status(200);
+    res.status(200).send(results);
 })
 
 // get Tag by id
@@ -23,8 +23,8 @@ router.get("/:id", async (req, res) => {
 
     let result = await collection.findOne(query);
 
-    if(!result) res.send("Not Found").status(404);
-    else res.send(result).status(200);
+    if(!result) res.status(404).send("Not Found");
+    else res.status(200).send(result);
 })
 
 // create new Tags
@@ -37,7 +37,7 @@ router.post("/many", async (req, res) => {
 
         let result = await collection.insertMany(newTags);
 
-        res.send(result).status(204);
+        res.status(204).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");
@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
 
         let result = await collection.insertOne(newTag);
 
-        res.send(result).status(204);
+        res.status(204).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");
@@ -79,7 +79,7 @@ router.patch("/many", async (req, res) => {
 
         let result = await collection.bulkWrite(bulkOperation);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error updating record");
@@ -101,7 +101,7 @@ router.patch("/:id", async (req, res) => {
 
         let result = await collection.updateOne(query, updates);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error updating record");
@@ -121,7 +121,7 @@ router.delete("/many", async (req, res) => {
 
         let result = await collection.deleteMany(query);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error deleting record");
@@ -137,7 +137,7 @@ router.delete("/:id", async (req, res) => {
 
         let result = await collection.deleteOne(query);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error deleting record");

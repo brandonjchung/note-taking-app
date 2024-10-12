@@ -2,18 +2,17 @@ import { Button, ButtonGroup, Col, Form, Modal, Row  } from "react-bootstrap"
 import { PhotoshopPicker  } from "react-color" 
 import { useState } from "react";
 
-import { siteStyles } from "../types/siteStyles";
+import { useUser } from "./UserContext"
 
 import styles from './SettingsModal.module.css'
 
 type SettingsModalProps = {
     show: boolean,
-    siteStyles: siteStyles
-    setBackgroundColor: (color: string) => void,
-    setNoteColor: (color: string) => void,
-    setPrimaryButtonColor: (color: string) => void,
-    setSecondaryButtonColor: (color: string) => void,
-    setLabelColor: (color: string) => void,
+    // setBackgroundColor: (color: string) => void,
+    // setNoteColor: (color: string) => void,
+    // setPrimaryButtonColor: (color: string) => void,
+    // setSecondaryButtonColor: (color: string) => void,
+    // setLabelColor: (color: string) => void,
     setModalIsOpen: (state: boolean) => void
 }
 
@@ -22,27 +21,36 @@ export function SettingsModal( props : SettingsModalProps ) {
         hex: string
     };
 
+    const { user, setUser } = useUser();
+
     const [currSetting, setCurrSetting] = useState('profile');
     const [currSubSetting, setCurrSubSetting] = useState('Background Color');
-    const [currColor, setCurrColor] = useState(props.siteStyles.background);
+    const [currColor, setCurrColor] = useState(user?.stylePreferences?.backgroundColor);
 
     const handleAccept = ( currSubSetting: string ) => {
-        if(currSubSetting == 'Background Color'){
-            props.setBackgroundColor(currColor);
+        const stylePreferences = {...user?.stylePreferences};
+
+        switch(currSubSetting){
+            case 'Background Color':
+                stylePreferences.backgroundColor = currColor;
+                break;
+            case 'Note Color':
+                stylePreferences.noteColor = currColor;
+                break;
+            case 'Primary Button Color':
+                stylePreferences.primaryButtonColor = currColor;
+                break;
+            case 'Secondary Button Color':
+                stylePreferences.secondaryButtonColor = currColor;
+                break;
+            case 'Label':
+                stylePreferences.labelColor = currColor;
+                break;
         }
-        else if(currSubSetting == 'Note Color'){
-            props.setNoteColor(currColor);
-        }
-        else if(currSubSetting == 'Primary Button Color'){
-            props.setPrimaryButtonColor(currColor);
-        }
-        else if(currSubSetting == 'Secondary Button Color'){
-            props.setSecondaryButtonColor(currColor);
-        }
-        else if(currSubSetting == 'Label'){
-            props.setLabelColor(currColor);
-        }
-        // try like event stop propogationn or something here
+        
+        setUser((prevSettings) => {
+            return {...prevSettings, ...stylePreferences}
+        });
     };
 
     const handleChange = (color: colorObj) => {
@@ -53,15 +61,15 @@ export function SettingsModal( props : SettingsModalProps ) {
         // setShowBackgroundColorPicker(false);
         switch(currSubSetting){
             case 'Background Color':
-                return setCurrColor(props.siteStyles.background);
+                return setCurrColor(user?.stylePreferences?.backgroundColor);
             case 'Note Color':
-                return setCurrColor(props.siteStyles.note);
+                return setCurrColor(user?.stylePreferences?.noteColor);
             case 'Primary Button Color':
-                return setCurrColor(props.siteStyles.primary);
+                return setCurrColor(user?.stylePreferences?.primaryButtonColor);
             case 'Secondary Button Color':
-                return setCurrColor(props.siteStyles.secondary);
+                return setCurrColor(user?.stylePreferences?.secondaryButtonColor);
             case 'Label':
-                return setCurrColor(props.siteStyles.label);
+                return setCurrColor(user?.stylePreferences?.labelColor);
         }
     };
 
@@ -70,33 +78,33 @@ export function SettingsModal( props : SettingsModalProps ) {
 
         switch(currSubSetting){
             case 'Background Color':
-                return setCurrColor(props.siteStyles.background);
+                return setCurrColor(user?.stylePreferences?.backgroundColor);
             case 'Note Color':
-                return setCurrColor(props.siteStyles.note);
+                return setCurrColor(user?.stylePreferences?.noteColor);
             case 'Primary Button Color':
-                return setCurrColor(props.siteStyles.primary);
+                return setCurrColor(user?.stylePreferences?.primaryButtonColor);
             case 'Secondary Button Color':
-                return setCurrColor(props.siteStyles.secondary);
+                return setCurrColor(user?.stylePreferences?.secondaryButtonColor);
             case 'Label':
-                return setCurrColor(props.siteStyles.label);
+                return setCurrColor(user?.stylePreferences?.labelColor);
         }
     };
 
     const primaryStyleProps = {
-        background: props.siteStyles.primary, 
-        borderColor: props.siteStyles.primary, 
-        color:props.siteStyles.label,
+        background: user?.stylePreferences?.primaryButtonColor, 
+        borderColor: user?.stylePreferences?.primaryButtonColor, 
+        color:user?.stylePreferences?.labelColor,
     };
     
     const secondaryStyleProps = {
-        background: props.siteStyles.secondary, 
-        borderColor: props.siteStyles.secondary, 
-        color:props.siteStyles.label,
+        background: user?.stylePreferences?.secondaryButtonColor, 
+        borderColor: user?.stylePreferences?.secondaryButtonColor, 
+        color:user?.stylePreferences?.labelColor,
     };
 
     return <Modal size="xl" show={props.show} onHide={() => {props.setModalIsOpen(false)}} centered>
-        <Modal.Header style={{ background: props.siteStyles.background }} closeButton></Modal.Header>
-        <Modal.Body style={{ background: props.siteStyles.background, color: props.siteStyles.label, height: window.innerHeight*.6 }} >
+        <Modal.Header style={{ background: user?.stylePreferences?.backgroundColor }} closeButton></Modal.Header>
+        <Modal.Body style={{ background: user?.stylePreferences?.backgroundColor, color: user?.stylePreferences?.labelColor, height: window.innerHeight*.6 }} >
             <Form>
                 <Row>
                     <Col xs={3}>

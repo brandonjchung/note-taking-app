@@ -5,8 +5,9 @@ export type Note = {
 } & NoteData
 
 export type NoteData = {
-    title: string
-    markdown: string
+    markdown: string,
+    title: string,
+    userId: string,
     tags: Tag[]
 }
 
@@ -15,7 +16,8 @@ export type RawNote = {
 } & RawNoteData
 
 export type RawNoteData = {
-    title: string
-    markdown: string
+    markdown: string,
+    title: string,
+    userId: string,
     tagIds: string[]
 }

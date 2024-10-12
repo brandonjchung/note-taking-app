@@ -5,19 +5,19 @@ import ReactMarkdown from "react-markdown"
 
 import { onDeleteNote } from "../helper/note_util"
 
+import { useUser } from "./UserContext"
 import { useNote } from "./NoteLayout"
 
-import { siteStyles } from "../types/siteStyles"
 import { RawNote } from "../types/notes"
 
 import globalStyle from '../assets/global.module.css'
 
 type NoteProps = {
-    setNotes: Dispatch<SetStateAction<RawNote[]>>, 
-    siteStyles: siteStyles
+    setNotes: Dispatch<SetStateAction<RawNote[]>>
 }
 
-export function ViewNote({ setNotes, siteStyles }: NoteProps) {
+export function ViewNote({ setNotes }: NoteProps) {
+    const { user } = useUser();
     const nav = useNavigate();
     const note = useNote();
     
@@ -31,7 +31,7 @@ export function ViewNote({ setNotes, siteStyles }: NoteProps) {
     return <>
         <Row className="align-items-center mb-4">
             <Col>
-                <h1 style={{ color: siteStyles.label }}>{note.title}</h1>
+                <h1 style={{ color: user?.stylePreferences?.labelColor }}>{note.title}</h1>
                 {note.tags.length > 0 && (
                     <Stack gap={1} direction="horizontal" className="flex-wrap">
                         {note.tags.map(tag => (
@@ -44,7 +44,7 @@ export function ViewNote({ setNotes, siteStyles }: NoteProps) {
                 <Stack gap={2} direction="horizontal">
                     <Link to={`/${note._id}/edit`}>
                         <Button 
-                            style={{ backgroundColor: siteStyles.primary, borderColor: siteStyles.primary, color: siteStyles.label }}
+                            style={{ backgroundColor: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color: user?.stylePreferences?.labelColor }}
                             className={globalStyle.button}>
                             Edit
                         </Button>
@@ -59,7 +59,7 @@ export function ViewNote({ setNotes, siteStyles }: NoteProps) {
                     </Button>
                     <Link to="/">
                         <Button 
-                            style={{ backgroundColor: siteStyles.secondary, borderColor: siteStyles.secondary, color: siteStyles.label }}
+                            style={{ backgroundColor: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color: user?.stylePreferences?.labelColor }}
                             className={globalStyle.button}>
                             Back
                         </Button>
@@ -70,12 +70,12 @@ export function ViewNote({ setNotes, siteStyles }: NoteProps) {
         <ReactMarkdown components={{
             ul(props) {
                 const {node, ...rest} = props;
-                return <ul style={{ backgroundColor: siteStyles.note, margin: '0px', color: siteStyles.label }} {...rest} />
+                return <ul style={{ backgroundColor: user?.stylePreferences?.noteColor, margin: '0px', color: user?.stylePreferences?.labelColor }} {...rest} />
             },
             
             p(props) {
                 const {node, ...rest} = props;
-                return <ul style={{ backgroundColor: siteStyles.note, margin: '0px', color: siteStyles.label }} {...rest} />
+                return <ul style={{ backgroundColor: user?.stylePreferences?.noteColor, margin: '0px', color: user?.stylePreferences?.labelColor }} {...rest} />
             }
         }}>
             {note.markdown}

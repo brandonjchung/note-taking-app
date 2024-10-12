@@ -7,7 +7,7 @@ type stylePreferences = {
 }
 
 export type User = {
-    id: string,
+    _id: string,
     username: string,
     password: string,
     stylePreferences: stylePreferences

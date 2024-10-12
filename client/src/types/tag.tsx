@@ -1,4 +1,4 @@
 export type Tag = {
-    _id: string
+    _id: string,
     label: string
 }

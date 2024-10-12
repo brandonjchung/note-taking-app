@@ -2,10 +2,9 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
 import { Container, Button, Stack } from "react-bootstrap"
 import { useState, useEffect, useMemo } from "react"
 
-// import { useLocalStorage } from "./helper/useLocalStorage"
-
 import { SettingsModal } from "./components/SettingsModal"
 import { NoteLayout } from "./components/NoteLayout"
+import { useUser } from "./components/UserContext"
 import { EditNote } from "./components/EditNote"
 import { NoteList } from "./components/NoteList"
 import { ViewNote } from "./components/ViewNote"
@@ -17,63 +16,79 @@ import { getNotes } from "./api/notesApi"
 import { getTags } from "./api/tagsApi"
 
 import { RawNote } from "./types/notes"
-import { User } from "./types/user"
 import { Tag } from "./types/tag"
 
 import "bootstrap/dist/css/bootstrap.min.css"
 import styles from './App.module.css'
 
-
 function App() {
-    // const [primaryButtonColor, setPrimaryButtonColor] = useLocalStorage<string>("PRIMARY_COLOR", '#1A00FF');
-    // const [secondaryButtonColor, setSecondaryButtonColor] = useLocalStorage<string>("SECONDARY_COLOR", '#B3B3B3');
-    // const [backgroundColor, setBackgroundColor] = useLocalStorage<string>("BACKGROUND_COLOR", '#ffffff');
-    // const [labelColor, setLabelColor] = useLocalStorage<string>("LABEL_COLOR", '##000000');
-    // const [noteColor, setNote] = useLocalStorage<string>("NOTE_COLOR", '#ffffff');
-    // const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
-    // const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
-    
-    const [primaryButtonColor, setPrimaryButtonColor] = useState<string>('#1A00FF');
-    const [secondaryButtonColor, setSecondaryButtonColor] = useState<string>('#B3B3B3');
-    const [backgroundColor, setBackgroundColor] = useState<string>('#ffffff');
-    const [labelColor, setLabelColor] = useState<string>('##000000');
-    const [noteColor, setNote] = useState<string>('#ffffff');
     const [notes, setNotes] = useState<RawNote[]>([]);
     const [tags, setTags] = useState<Tag[]>([]); 
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     
-    const [user, setUser] = useState<User>();
-
+    const { user, setUser } = useUser();
     const nav = useNavigate();
     
-    const siteStyles = {
-        background: backgroundColor,
-        note: noteColor,
-        primary: primaryButtonColor,
-        secondary: secondaryButtonColor,
-        label: labelColor,
-    };
+    // useEffect(() => {
+    //     // handle the user preferences update here
+    //     if(modalIsOpen == false){
+    //         console.log('user prefs closed update ');
+    //         console.log('but could get false updates though, really consider a save button here')
+    //     }
+
+    // }, [modalIsOpen]);
+    
+    useEffect(() => {
+        document.body.style.backgroundColor = user?.stylePreferences?.backgroundColor;
+
+    }, [user?.stylePreferences?.backgroundColor]);
 
     useEffect(() => {
-        document.body.style.backgroundColor = backgroundColor;
+        if(user?._id != '' && user?._id != null){
+            getNotes(user?._id).then((noteData) => {
+                if(noteData){
+                    setNotes(noteData);
+                }
+            });
+            getTags(user?._id).then((tagData) => {
+                if(tagData){
+                    setTags(tagData);
+                }
+            });
+        }
 
-        if(user?.username == '' || user?.username == null){
+    }, [notes.length, tags.length]);
+    
+    useEffect(() => {
+        console.log(user);
+        // things to add for this feature and still need to test
+            // remove the colors from everywhere use the usercontext to directly access the settings
+            // reattach notes and tags to lookup logged in user
+            // only query notes and tags by logged in user
+            // style preferences load by user and update somehow LOL
+
+        // things updated
+            // only query notes and tags by logged in user
+            // refactor added user appwide context` and removed site wide styling states
+        if(user?._id == '' || user?._id == null){
             nav(`/login`);
             return;
         }
+        else{
+            getNotes(user?._id).then((noteData) => {
+                if(noteData){
+                    setNotes(noteData);
+                }
+            });
+            getTags(user?._id).then((tagData) => {
+                if(tagData){
+                    setTags(tagData);
+                }
+            });
+        }
 
-        getNotes().then((noteData) => {
-            if(noteData){
-                setNotes(noteData);
-            }
-        });
-        getTags().then((tagData) => {
-            if(tagData){
-                setTags(tagData);
-            }
-        });
-    }, [backgroundColor, notes.length, tags.length, user?.username]);
+    }, [user?.username]);
 
     const notesWithTags = useMemo(() => {
         return notes.map(note => {
@@ -81,12 +96,13 @@ function App() {
         })
     }, [notes, tags]);
 
+
     return (
         <Container className={styles.mainContainer}>
             {user?.username != '' && (
                 <Stack direction="horizontal" className="justify-content-end">
                     <Button 
-                        style={{ background: primaryButtonColor, borderColor: primaryButtonColor, color: labelColor }}
+                        style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color: user?.stylePreferences?.labelColor }}
                         onClick={() => setModalIsOpen(true)} 
                         className={styles.button} >
                         Settings
@@ -95,22 +111,16 @@ function App() {
             )}
             <SettingsModal 
                 show={modalIsOpen} 
-                siteStyles={siteStyles}
-                setBackgroundColor={setBackgroundColor} 
-                setNoteColor={setNote}
-                setPrimaryButtonColor={setPrimaryButtonColor}
-                setSecondaryButtonColor={setSecondaryButtonColor}
-                setLabelColor={setLabelColor}
                 setModalIsOpen={() => setModalIsOpen(false)}
             />
             <Routes>
-                <Route path="/" element={<NoteList setTags={setTags} availableTags={tags} notes={notesWithTags} siteStyles={siteStyles}/>}/>
-                <Route path="/login" element={<Login setUser={setUser} siteStyles={siteStyles}/>}/>
-                <Route path="/signup" element={<Signup setUser={setUser} siteStyles={siteStyles}/>}/>
-                <Route path="/new" element={<NewNote setNotes={setNotes} setTags={setTags} availableTags={tags} siteStyles={siteStyles}/>}/>
+                <Route path="/" element={<NoteList setTags={setTags} availableTags={tags} notes={notesWithTags}/>}/>
+                <Route path="/login" element={<Login setUser={setUser}/>}/>
+                <Route path="/signup" element={<Signup setUser={setUser}/>}/>
+                <Route path="/new" element={<NewNote setNotes={setNotes} setTags={setTags} availableTags={tags}/>}/>
                 <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
-                    <Route index element={<ViewNote siteStyles={siteStyles} setNotes={setNotes}/>}/>
-                    <Route path="edit" element={<EditNote setNotes={setNotes} setTags={setTags} availableTags={tags} siteStyles={siteStyles}/>}/>
+                    <Route index element={<ViewNote setNotes={setNotes}/>}/>
+                    <Route path="edit" element={<EditNote setNotes={setNotes} setTags={setTags} availableTags={tags}/>}/>
                 </Route>
                 <Route path="/*" element={<Navigate to="/" />}/>
             </Routes>

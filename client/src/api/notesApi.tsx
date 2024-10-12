@@ -1,4 +1,4 @@
-import { RawNote, RawNoteData } from "../App";
+import { RawNote, RawNoteData } from "../types/notes";
 
 export const createNote = async ( note : RawNoteData ) => {
     const response = await fetch(`http://localhost:5050/note/`, {
@@ -21,8 +21,8 @@ export const createNote = async ( note : RawNoteData ) => {
     }
 }
 
-export const getNotes = async () => {
-    const response = await fetch(`http://localhost:5050/note/`);
+export const getNotes = async ( userId: string ) => {
+    const response = await fetch(`http://localhost:5050/note/${userId}`);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;

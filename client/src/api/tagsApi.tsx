@@ -1,7 +1,7 @@
-import { Tag } from "../App";
+import { Tag } from "../types/tag";
 
-export const getTags = async () => {
-    const response = await fetch(`http://localhost:5050/tag/`);
+export const getTags = async ( userId : string ) => {
+    const response = await fetch(`http://localhost:5050/tag/${userId}`);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -120,8 +120,6 @@ export const deleteTags = async ( ids: string[] ) => {
         },
         body: JSON.stringify({ids})
     });
-    console.log(response);
-    console.log(response.json());
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;

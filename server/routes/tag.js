@@ -15,13 +15,13 @@ router.get("/", async (req, res) => {
     res.status(200).send(results);
 })
 
-// get Tag by id
+// get Tags by userId
 router.get("/:id", async (req, res) => {
     let collection = db.collection("tags");
 
-    let query = { _id: new ObjectId(req.params.id) };
+    let query = { userId: req.params.id };
 
-    let result = await collection.findOne(query);
+    let result = await collection.find(query).toArray();
 
     if(!result) res.status(404).send("Not Found");
     else res.status(200).send(result);

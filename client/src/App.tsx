@@ -30,47 +30,24 @@ function App() {
     const { user, setUser } = useUser();
     const nav = useNavigate();
     
-    // useEffect(() => {
-    //     // handle the user preferences update here
-    //     if(modalIsOpen == false){
-    //         console.log('user prefs closed update ');
-    //         console.log('but could get false updates though, really consider a save button here')
-    //     }
-
-    // }, [modalIsOpen]);
-    
     useEffect(() => {
         document.body.style.backgroundColor = user?.stylePreferences?.backgroundColor;
 
     }, [user?.stylePreferences?.backgroundColor]);
-
-    useEffect(() => {
-        if(user?._id != '' && user?._id != null){
-            getNotes(user?._id).then((noteData) => {
-                if(noteData){
-                    setNotes(noteData);
-                }
-            });
-            getTags(user?._id).then((tagData) => {
-                if(tagData){
-                    setTags(tagData);
-                }
-            });
-        }
-
-    }, [notes.length, tags.length]);
     
     useEffect(() => {
-        console.log(user);
+        // new features
+            // improve the markdown
+            // add friends 
+
         // things to add for this feature and still need to test
+            // update all note tag and user api callouts to only run on unload 
+
+        // things updated
+            // style preferences load by user and update somehow LOL
             // remove the colors from everywhere use the usercontext to directly access the settings
             // reattach notes and tags to lookup logged in user
             // only query notes and tags by logged in user
-            // style preferences load by user and update somehow LOL
-
-        // things updated
-            // only query notes and tags by logged in user
-            // refactor added user appwide context` and removed site wide styling states
         if(user?._id == '' || user?._id == null){
             nav(`/login`);
             return;

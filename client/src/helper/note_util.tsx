@@ -9,11 +9,11 @@ type onCreateNoteProps = {
     nav: NavigateFunction
 }
 
-// refactor later into just the api
 export function onCreateNote( { noteDataProps: { tags, ...data }, setNotes, nav }: onCreateNoteProps ) {
+
     createNote({...data, tagIds: tags.map(tag => tag._id)}).then((res: string) => {
         if(res != null){
-            getNotes().then((noteData: RawNote[]) => {
+            getNotes(data.userId).then((noteData: RawNote[]) => {
                 if(noteData){
                     setNotes(noteData);
                     nav(`/${res}`);

@@ -6,7 +6,7 @@ import { useUser } from "./UserContext"
 
 import { User } from "../types/user"
 
-import { signupUser } from "../api/signupApi"
+import { signupUser } from "../api/userApi"
 
 import globalStyle from "../assets/global.module.css"
 
@@ -30,10 +30,11 @@ export function Signup({ setUser } : SignupProps) {
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
-        signupUser(usernameRef.current!.value, passwordRef.current!.value).then((res) => {
+        const newUser = {...user, username: usernameRef.current!.value, password: passwordRef.current!.value}
 
+        signupUser(newUser).then((res) => {
             if(res instanceof Response == false){
-                setUser(res);
+                setUser(newUser);
                 nav(`/`)
             }          
             else if(res?.status == 401){

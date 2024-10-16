@@ -95,14 +95,14 @@ export function NoteList({ availableTags, notes, setTags } : NoteListProps) {
                                 multiValueRemove: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),
                             }}
                             options={availableTags.map(tag => {
-                                return {label: tag.label, value: tag._id}
+                                return {label: tag.label, value: tag._id, userId: tag.userId }
                             })}
                             value={selectedTags.map(tag => {
-                                return {label: tag.label, value: tag._id}    
+                                return {label: tag.label, value: tag._id, userId: tag.userId }    
                             })}
                             onChange={tags => {
                                 setSelectedTags(tags.map(tag => {
-                                    return { label: tag.label, _id: tag.value}
+                                    return { label: tag.label, _id: tag.value, userId: tag.userId }
                                 }))
                             }}
                             isMulti/>
@@ -158,6 +158,7 @@ function EditTagsModal({ availableTags, setTags, closeModal, show }: EditTagsMod
             console.log(filteredTags);
             const onCreateTagsProps = {
                 tagsToCreate: filteredTags,
+                userId: user._id,
                 setTags
             }
             onCreateTags(onCreateTagsProps);

@@ -33,14 +33,16 @@ router.post("/", async (req, res) => {
         let newNote = {
             title: req.body.title,
             markdown: req.body.markdown,
+            userId: req.body.userId,
             tagIds: req.body.tagIds,
         };
 
         let collection = db.collection("notes");
 
         let result = await collection.insertOne(newNote);
+        console.log(result);
 
-        res.status(204).send(result);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");

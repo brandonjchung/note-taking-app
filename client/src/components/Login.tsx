@@ -6,7 +6,7 @@ import { useUser } from "./UserContext"
 
 import { User } from "../types/user"
 
-import { loginUser } from "../api/loginApi"
+import { loginUser } from "../api/userApi"
 
 import globalStyle from "../assets/global.module.css"
 

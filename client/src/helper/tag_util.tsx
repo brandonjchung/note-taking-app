@@ -4,14 +4,14 @@ import { Tag } from "../types/tag";
 
 type onCreateTagProps = {
     label: string, 
+    userId: string,
     setTags: Dispatch<SetStateAction<Tag[]>>
 }
 
-// refactor later into just the api
-export async function onCreateTag({ label, setTags }: onCreateTagProps){
-    const res = await createTag(label);
+export async function onCreateTag({ label, userId, setTags }: onCreateTagProps){
+    const res = await createTag({label, userId});
     if(res){
-        const tagData = await getTags();
+        const tagData = await getTags(userId);
         if(tagData){
             setTags(tagData);
             return tagData;
@@ -26,13 +26,14 @@ export async function onCreateTag({ label, setTags }: onCreateTagProps){
 
 type onCreateTagsProps = {
     tagsToCreate: string[], 
+    userId: string,
     setTags: Dispatch<SetStateAction<Tag[]>>
 }
 
-export async function onCreateTags({ tagsToCreate, setTags }: onCreateTagsProps){
-    const res = await createTags(tagsToCreate);
+export async function onCreateTags({ tagsToCreate, userId, setTags }: onCreateTagsProps){
+    const res = await createTags(tagsToCreate, userId);
     if(res){
-        const tagData = await getTags();
+        const tagData = await getTags(userId);
         if(tagData){
             setTags(tagData);
             return tagData;

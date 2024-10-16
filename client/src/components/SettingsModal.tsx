@@ -3,16 +3,12 @@ import { PhotoshopPicker  } from "react-color"
 import { useState } from "react";
 
 import { useUser } from "./UserContext"
+import { updateUser } from "../api/userApi";
 
 import styles from './SettingsModal.module.css'
 
 type SettingsModalProps = {
     show: boolean,
-    // setBackgroundColor: (color: string) => void,
-    // setNoteColor: (color: string) => void,
-    // setPrimaryButtonColor: (color: string) => void,
-    // setSecondaryButtonColor: (color: string) => void,
-    // setLabelColor: (color: string) => void,
     setModalIsOpen: (state: boolean) => void
 }
 
@@ -49,8 +45,13 @@ export function SettingsModal( props : SettingsModalProps ) {
         }
         
         setUser((prevSettings) => {
-            return {...prevSettings, ...stylePreferences}
+            return {...prevSettings, stylePreferences: stylePreferences}
         });
+
+        // 
+        // REFACTOR: Bulkify updates
+        // 
+        updateUser(user);
     };
 
     const handleChange = (color: colorObj) => {

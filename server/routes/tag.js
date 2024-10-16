@@ -27,35 +27,36 @@ router.get("/:id", async (req, res) => {
     else res.status(200).send(result);
 })
 
-// create new Tags
-router.post("/many", async (req, res) => {
+// create new Tag
+router.post("/", async (req, res) => {
     try {
+        let newTag = {
+            label: req.body.label,
+            userId: req.body.userId,
+        };
 
         let collection = db.collection("tags");
 
-        const newTags = req.body.labels.map((label) => { return { label: label }})
+        let result = await collection.insertOne(newTag);
+        console.log(result);
 
-        let result = await collection.insertMany(newTags);
-
-        res.status(204).send(result);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");
     }
 })
 
-// create new Tag
-router.post("/", async (req, res) => {
+// create new Tags
+router.post("/many", async (req, res) => {
     try {
-        let newTag = {
-            label: req.body.label,
-        };
-
         let collection = db.collection("tags");
 
-        let result = await collection.insertOne(newTag);
+        const newTags = req.body.labels.map((label) => { return { label: label, userId: userId }})
 
-        res.status(204).send(result);
+        let result = await collection.insertMany(newTags);
+
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");

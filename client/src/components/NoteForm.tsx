@@ -42,36 +42,24 @@ export function NoteForm({ setNotes, setTags, availableTags, title="", markdown 
     
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
+        
+        const noteData = {
+            noteDataProps: {
+                title: titleRef.current!.value,
+                markdown: markdownRef.current!.value,
+                userId: user._id,
+                tags: selectedTags
+            },
+            nav,
+            setNotes
+        };
 
         if(params.id){
             const id = params.id;
-            const noteData = {
-                noteDataProps: {
-                    title: titleRef.current!.value,
-                    markdown: markdownRef.current!.value,
-                    userId: user._id,
-                    tags: selectedTags
-                },
-                setNotes, 
-                nav,
-                id
-            };
-    
-            onEditNote(noteData);
+            onEditNote({...noteData, id});
 
         }
         else{
-            const noteData = {
-                noteDataProps: {
-                    title: titleRef.current!.value,
-                    markdown: markdownRef.current!.value,
-                    userId: user._id,
-                    tags: selectedTags
-                },
-                setNotes, 
-                nav
-            };
-    
             onCreateNote(noteData);
         }
     }
@@ -105,7 +93,8 @@ export function NoteForm({ setNotes, setTags, availableTags, title="", markdown 
                                     option: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 }}
                                 onCreateOption={label => {
-                                    onCreateTag({label, setTags}).then((tagData: void | Tag[]) => {
+                                    const userId = user._id;
+                                    onCreateTag({label, userId, setTags}).then((tagData: void | Tag[]) => {
                                         if(tagData != null){
                                             setSelectedTags(prevTags => {
                                                 const newTag = tagData.find(tag => tag.label == label);
@@ -125,7 +114,7 @@ export function NoteForm({ setNotes, setTags, availableTags, title="", markdown 
                                 })}
                                 onChange={tags => {
                                     setSelectedTags(tags.map(tag => {
-                                        return { label: tag.label, _id: tag.value}
+                                        return { label: tag.label, _id: tag.value, userId: user._id}
                                     }))
                                 }}
                                 isMulti/>
@@ -152,12 +141,7 @@ export function NoteForm({ setNotes, setTags, availableTags, title="", markdown 
                             onClick={() => {
                                 const id = params.id;
                                 if(id){
-                                    const onDeleteNotesProps = {
-                                        setNotes,
-                                        id, 
-                                        nav
-                                    }
-                                    onDeleteNote(onDeleteNotesProps);
+                                    onDeleteNote({setNotes, id, nav});
                                 }
                             }}   
                             className={globalStyle.button}

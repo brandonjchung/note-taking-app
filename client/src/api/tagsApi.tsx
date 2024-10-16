@@ -1,4 +1,4 @@
-import { Tag } from "../types/tag";
+import { Tag, RawTag } from "../types/tag";
 
 export const getTags = async ( userId : string ) => {
     const response = await fetch(`http://localhost:5050/tag/${userId}`);
@@ -14,16 +14,15 @@ export const getTags = async ( userId : string ) => {
     return tagData;
 }
 
-export const createTag = async ( label : string ) => {
+export const createTag = async ( rawTagData: RawTag ) => {
     const response = await fetch(`http://localhost:5050/tag/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({label: label})
+        body: JSON.stringify(rawTagData)
     });
 
-    const tagData = await response.json();
 
     if(!response.ok) {
         const message = `An error occurred: ${response.status}`;
@@ -31,21 +30,20 @@ export const createTag = async ( label : string ) => {
         return null;
     }
     else{
+        const tagData = await response.json();
         return tagData.insertedId;
     }
 }
 
 
-export const createTags = async ( labels : string[] ) => {
+export const createTags = async ( labels : string[], userId : string ) => {
     const response = await fetch(`http://localhost:5050/tag/many`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({labels: labels})
+        body: JSON.stringify({labels: labels, userId: userId})
     });
-
-    const tagData = await response.json();
 
     if(!response.ok) {
         const message = `An error occurred: ${response.status}`;
@@ -53,6 +51,7 @@ export const createTags = async ( labels : string[] ) => {
         return null;
     }
     else{
+        const tagData = await response.json();
         return tagData.insertedIds;
     }
 }
@@ -112,7 +111,6 @@ export const deleteTag = async ( id: string ) => {
 }
 
 export const deleteTags = async ( ids: string[] ) => {
-    console.log(ids);
     const response = await fetch(`http://localhost:5050/tag/many`, {
         method: "DELETE",
         headers: {

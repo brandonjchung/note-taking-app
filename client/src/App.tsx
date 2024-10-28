@@ -39,15 +39,23 @@ function App() {
         // new features
             // improve the markdown
             // add friends 
+            // profile settings
+            // second layout
 
         // things to add for this feature and still need to test
             // update all note tag and user api callouts to only run on unload 
 
+        // broken
+            // style preferences only save on second click of save
+            
+
         // things updated
+            // edit tags button broken 
             // style preferences load by user and update somehow LOL
             // remove the colors from everywhere use the usercontext to directly access the settings
             // reattach notes and tags to lookup logged in user
             // only query notes and tags by logged in user
+            console.log(user);
         if(user?._id == '' || user?._id == null){
             nav(`/login`);
             return;

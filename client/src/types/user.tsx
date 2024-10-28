@@ -9,6 +9,9 @@ type stylePreferences = {
 export type User = {
     _id: string,
     username: string,
+    firstName: string,
+    lastName: string,
     password: string,
-    stylePreferences: stylePreferences
+    stylePreferences: stylePreferences,
+    layout: string
 }

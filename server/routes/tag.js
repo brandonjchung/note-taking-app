@@ -51,8 +51,8 @@ router.post("/", async (req, res) => {
 router.post("/many", async (req, res) => {
     try {
         let collection = db.collection("tags");
-
-        const newTags = req.body.labels.map((label) => { return { label: label, userId: userId }})
+        console.log(1);
+        const newTags = req.body.labels.map((label) => { return { label: label, userId: req.body.userId }})
 
         let result = await collection.insertMany(newTags);
 

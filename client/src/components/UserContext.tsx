@@ -7,6 +7,8 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 const defaultUser: User = {
     _id: '',
     username: '',
+    firstName: '',
+    lastName: '',
     password: '',
     stylePreferences: {
         primaryButtonColor: '#1A00FF',
@@ -14,7 +16,8 @@ const defaultUser: User = {
         backgroundColor: '#ffffff',
         labelColor: '##000000',
         noteColor: '#ffffff'
-    }
+    },
+    layout: 'tiles'
 };
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {

@@ -41,9 +41,8 @@ export const signupUser = async ( user: User ) => {
     }
 }
 
-
-export const updateUser = async ( user: User ) => {
-    const response = await fetch(`http://localhost:5050/user/update`, {
+export const updateUserStyle = async ( user: User ) => {
+    const response = await fetch(`http://localhost:5050/user/updateStyle`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -51,10 +50,39 @@ export const updateUser = async ( user: User ) => {
         body: JSON.stringify(user)
     });
 
-    console.log('JSON.stringify(user)');
-    console.log(JSON.stringify(user));
-    console.log(response);
-    console.log(response.json());
+    if(!response?.ok) {
+        const message = `An error occurred: ${response.status}`;
+        console.error(message);
+        return response;
+    }
+    return response;
+}
+
+export const updateUserProfileWithPassword = async ( user: User ) => {
+    const response = await fetch(`http://localhost:5050/user/updateProfileWithPassword`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+    });
+
+    if(!response?.ok) {
+        const message = `An error occurred: ${response.status}`;
+        console.error(message);
+        return response;
+    }
+    return response;
+}
+
+export const updateUserProfileWithoutPassword = async ( user: User ) => {
+    const response = await fetch(`http://localhost:5050/user/updateProfileWithoutPassword`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+    });
 
     if(!response?.ok) {
         const message = `An error occurred: ${response.status}`;

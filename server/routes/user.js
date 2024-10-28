@@ -43,6 +43,8 @@ router.post("/signup", async (req, res) => {
     
         let newUser = {
             username: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             password: hashedPassword
         };
 
@@ -57,13 +59,12 @@ router.post("/signup", async (req, res) => {
     }
 })
 
-// update user
-router.patch("/update", async (req, res) => {
+// update user style
+router.patch("/updateStyle", async (req, res) => {
     try {
-        console.log('req.body._id');
-        console.log(req.body._id);
-        const query = { _id: new ObjectId(req.body._id) };
+        const query = { _id: new ObjectId(String(req.body._id)) };
 
+        console.log(req.body.stylePreferences);
         const updates = {
             $set: {
                 stylePreferences: req.body.stylePreferences,
@@ -74,15 +75,57 @@ router.patch("/update", async (req, res) => {
 
         let result = await collection.updateOne(query, updates);
             
-        let test = { _id: req.body._id };
-
-        let resulttest = await collection.findOne(test);
-
-        console.log('resulttest');
-        console.log(resulttest);
-
-        console.log('result');
         console.log(result);
+        res.status(200).send(result);
+    } catch(err) {
+        console.log(err);
+        res.status(500).send(null);
+    }
+})
+
+
+router.patch("/updateProfileWithPassword", async (req, res) => {
+    try {
+        const query = { _id: new ObjectId(String(req.body._id)) };
+
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+        const updates = {
+            $set: {
+                username: req.body.username,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                password: hashedPassword
+            }
+        };
+
+        let collection = db.collection("users");
+
+        let result = await collection.updateOne(query, updates);
+            
+        res.status(200).send(result);
+    } catch(err) {
+        console.log(err);
+        res.status(500).send(null);
+    }
+})
+
+router.patch("/updateProfileWithoutPassword", async (req, res) => {
+    try {
+        const query = { _id: new ObjectId(String(req.body._id)) };
+
+        const updates = {
+            $set: {
+                username: req.body.username,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+            }
+        };
+
+        let collection = db.collection("users");
+
+        let result = await collection.updateOne(query, updates);
+            
         res.status(200).send(result);
     } catch(err) {
         console.log(err);

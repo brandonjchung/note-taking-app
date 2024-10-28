@@ -11,7 +11,6 @@ import { useUser } from "./UserContext"
 import { Note } from "../types/notes"
 import { Tag } from "../types/tag"
 
-
 import globalStyle from "../assets/global.module.css"
 
 type NoteListProps = {
@@ -262,18 +261,18 @@ function EditTagsModal({ availableTags, setTags, closeModal, show }: EditTagsMod
                         </Col>
                         <Col xs={6} className="d-flex justify-content-end">
                             <Button 
-                                style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color:user?.stylePreferences?.labelColor, marginRight:'8px' }}
-                                onClick={() => {handleSave()}}
-                                className={globalStyle.button} 
-                                type="button" >
-                                Save
-                            </Button>
-                            <Button 
-                                style={{ background: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color:user?.stylePreferences?.labelColor }}
+                                style={{ background: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color:user?.stylePreferences?.labelColor, marginRight:'8px' }}
                                 onClick={() => {handleClose()}}
                                 type="button" 
                                 className={globalStyle.button}>
                                 Cancel
+                            </Button>
+                            <Button 
+                                style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color:user?.stylePreferences?.labelColor }}
+                                onClick={() => {handleSave()}}
+                                className={globalStyle.button} 
+                                type="button" >
+                                Save
                             </Button>
                         </Col>
                     </Row>

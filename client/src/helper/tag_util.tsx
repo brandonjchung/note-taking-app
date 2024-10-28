@@ -103,7 +103,7 @@ export function onDeleteTags({ ids, setTags }: onDeleteTagsProps){
     deleteTags(ids).then((res) => {
         if(res != null){
             setTags(prevTags => {
-                return prevTags.filter(tag => ids.includes(tag._id))
+                return prevTags.filter(tag => !ids.includes(tag._id))
             })
         }
     });

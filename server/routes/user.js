@@ -83,6 +83,29 @@ router.patch("/updateStyle", async (req, res) => {
     }
 })
 
+// update user style
+router.patch("/updateLayout", async (req, res) => {
+    try {
+        const query = { _id: new ObjectId(String(req.body._id)) };
+
+        console.log(req.body.layout);
+        const updates = {
+            $set: {
+                layout: req.body.layout,
+            }
+        };
+
+        let collection = db.collection("users");
+
+        let result = await collection.updateOne(query, updates);
+            
+        console.log(result);
+        res.status(200).send(result);
+    } catch(err) {
+        console.log(err);
+        res.status(500).send(null);
+    }
+})
 
 router.patch("/updateProfileWithPassword", async (req, res) => {
     try {

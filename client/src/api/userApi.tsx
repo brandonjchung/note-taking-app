@@ -58,6 +58,23 @@ export const updateUserStyle = async ( user: User ) => {
     return response;
 }
 
+export const updateUserLayout = async ( user: User ) => {
+    const response = await fetch(`http://localhost:5050/user/updateLayout`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+    });
+
+    if(!response?.ok) {
+        const message = `An error occurred: ${response.status}`;
+        console.error(message);
+        return response;
+    }
+    return response;
+}
+
 export const updateUserProfileWithPassword = async ( user: User ) => {
     const response = await fetch(`http://localhost:5050/user/updateProfileWithPassword`, {
         method: "PATCH",

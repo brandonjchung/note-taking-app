@@ -1,7 +1,6 @@
 import { Row, Col, Badge, Stack, Button } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { Dispatch, SetStateAction } from "react"
-import ReactMarkdown from "react-markdown"
 
 import { onDeleteNote } from "../helper/note_util"
 
@@ -59,7 +58,7 @@ export function ViewNote({ setNotes }: NoteProps) {
                     </Button>
                     <Link to="/">
                         <Button 
-                            style={{ backgroundColor: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color: user?.stylePreferences?.labelColor }}
+                            style={{ backgroundColor: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color: user?.stylePreferences?.textColor }}
                             className={globalStyle.button}>
                             Back
                         </Button>
@@ -67,18 +66,10 @@ export function ViewNote({ setNotes }: NoteProps) {
                 </Stack>
             </Col>
         </Row>
-        <ReactMarkdown components={{
-            ul(props) {
-                const {node, ...rest} = props;
-                return <ul style={{ backgroundColor: user?.stylePreferences?.noteColor, margin: '0px', color: user?.stylePreferences?.labelColor }} {...rest} />
-            },
-            
-            p(props) {
-                const {node, ...rest} = props;
-                return <ul style={{ backgroundColor: user?.stylePreferences?.noteColor, margin: '0px', color: user?.stylePreferences?.labelColor }} {...rest} />
-            }
-        }}>
-            {note.markdown}
-        </ReactMarkdown>
+        <Row className="h-75">
+            <textarea disabled style={{ borderRadius: 10, backgroundColor: user?.stylePreferences?.noteColor, color: user?.stylePreferences?.textColor }}>
+                {note.markdown}
+            </textarea>
+        </Row>
     </>
 }

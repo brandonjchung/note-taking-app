@@ -46,15 +46,14 @@ export function Login({ setUser } : LoginProps) {
     const siteStyledTextBoxes = {
         backgroundColor: user?.stylePreferences?.noteColor, 
         borderColor: user?.stylePreferences?.noteColor, 
-        color: user?.stylePreferences?.labelColor
+        color: user?.stylePreferences?.textColor
     }
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} className="d-flex h-100 ">
             <Stack gap={4} className="d-flex justify-content-center align-items-center">
                 <Form.Text style={{ color: user?.stylePreferences?.labelColor, fontSize: '2rem' }} id="formLogin">Login</Form.Text>
 
-                <Form.Text style={{ color: 'red', fontSize: '1rem' }} id="errors">{errorText}</Form.Text>
 
                 <Form.Group controlId="formUsername" style={{ width:'20%' }}>
                     <Form.Label style={{ color: user?.stylePreferences?.labelColor }}>Username</Form.Label>
@@ -82,6 +81,7 @@ export function Login({ setUser } : LoginProps) {
                         Login
                     </Button>
                 </Stack>
+                <Form.Text style={{ color: 'red', fontSize: '1rem' }} id="errors">{errorText}</Form.Text>
             </Stack>
         </Form>
     )

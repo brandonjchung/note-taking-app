@@ -31,12 +31,11 @@ export function NoteForm({ setNotes, setTags, availableTags, title="", markdown 
     const siteStyledTextBoxes = {
         backgroundColor: user?.stylePreferences?.noteColor, 
         borderColor: user?.stylePreferences?.noteColor, 
-        color: user?.stylePreferences?.labelColor
+        color: user?.stylePreferences?.textColor
     }
     const siteStyledTags = {
-        backgroundColor: user?.stylePreferences?.backgroundColor, 
         borderColor: user?.stylePreferences?.noteColor, 
-        color: user?.stylePreferences?.labelColor,
+        color: user?.stylePreferences?.textColor,
         borderRadius: "3px"
     }
     

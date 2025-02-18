@@ -20,7 +20,7 @@ export function NoteCard({ id, title, tags }: NoteCardProps){
         <Card as={Link} to={`/${id}/edit`} className={`h-100 text-reset text-decoration-none ${styles.card}`} style={{ backgroundColor: user?.stylePreferences?.noteColor }}>
             <Card.Body>
                 <Stack gap={2} className="align-items-center justify-content-center h-100">
-                    <span className="fs-5" style={{ color: user?.stylePreferences?.labelColor }}>{title}</span>
+                    <span className="fs-5" style={{ color: user?.stylePreferences?.textColor }}>{title}</span>
                     {tags.length > 0 && (
                         <Stack gap={1} direction="horizontal" className="justify-content-center flex-wrap">
                             {tags.map(tag => (

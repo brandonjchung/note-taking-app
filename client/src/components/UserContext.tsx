@@ -11,10 +11,11 @@ const defaultUser: User = {
     lastName: '',
     password: '',
     stylePreferences: {
-        primaryButtonColor: '#1A00FF',
-        secondaryButtonColor: '#B3B3B3',
-        backgroundColor: '#ffffff',
-        labelColor: '##000000',
+        primaryButtonColor: '#0039FF',
+        secondaryButtonColor: '#5549FF',
+        backgroundColor: '#222227',
+        textColor: '#000000',
+        labelColor: '#ffffff',
         noteColor: '#ffffff'
     },
     layout: 'tiles'

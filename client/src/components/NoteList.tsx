@@ -36,13 +36,12 @@ export function NoteList({ availableTags, notes, setTags } : NoteListProps) {
     const siteStyledTextBoxes = {
         backgroundColor: user?.stylePreferences?.noteColor, 
         borderColor: user?.stylePreferences?.noteColor, 
-        color: user?.stylePreferences?.labelColor
+        color: user?.stylePreferences?.textColor
     };
     
     const siteStyledTags = {
-        backgroundColor: user?.stylePreferences?.backgroundColor, 
         borderColor: user?.stylePreferences?.noteColor, 
-        color: user?.stylePreferences?.labelColor,
+        color: user?.stylePreferences?.textColor,
         borderRadius: "3px"
     };
 
@@ -83,12 +82,15 @@ export function NoteList({ availableTags, notes, setTags } : NoteListProps) {
                     <Form.Group controlId="tags">
                         <Form.Label>Tags</Form.Label>
                         <ReactSelect 
+                            className="react-select-container"
+                            classNamePrefix="react-select"
                             styles={{
                                 control: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 menu: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 input: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 noOptionsMessage: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
-                                option: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
+                                option: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes, color:'black' }),
+                                placeholder: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 multiValue: (baseStyles) => ({ ...baseStyles, ...siteStyledTags, }),
                                 multiValueLabel: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),
                                 multiValueRemove: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),

@@ -3,6 +3,7 @@ import { Container, Button, Stack } from "react-bootstrap"
 import { useState, useEffect, useMemo } from "react"
 
 import { SettingsModal } from "./components/SettingsModal"
+import { SocialModal } from "./components/SocialModal"
 import { NoteLayout } from "./components/NoteLayout"
 import { useUser } from "./components/UserContext"
 import { EditNote } from "./components/EditNote"
@@ -25,7 +26,8 @@ function App() {
     const [notes, setNotes] = useState<RawNote[]>([]);
     const [tags, setTags] = useState<Tag[]>([]); 
 
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [settingsModalIsOpen, setSettingModalIsOpen] = useState(false);
+    const [socialModalIsOpen, setSocialModalIsOpen] = useState(false);
     
     const { user, setUser } = useUser();
     const nav = useNavigate();
@@ -83,34 +85,45 @@ function App() {
 
 
     return (
-        <Container className={styles.mainContainer}>
-            {user?.username != '' && (
-                <Stack direction="horizontal" className="justify-content-end">
-                    <Button 
-                        style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color: user?.stylePreferences?.labelColor }}
-                        onClick={() => setModalIsOpen(true)} 
-                        className={styles.button} >
-                        Settings
-                    </Button>
-                </Stack>
-            )}
-            <SettingsModal 
-                show={modalIsOpen} 
-                setModalIsOpen={() => setModalIsOpen(false)}
-            />
-            <Routes>
-                <Route path="/" element={<NoteList setTags={setTags} availableTags={tags} notes={notesWithTags}/>}/>
-                <Route path="/login" element={<Login setUser={setUser}/>}/>
-                <Route path="/signup" element={<Signup setUser={setUser}/>}/>
-                <Route path="/new" element={<NewNote setNotes={setNotes} setTags={setTags} availableTags={tags}/>}/>
-                <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
-                    <Route index element={<ViewNote setNotes={setNotes}/>}/>
-                    <Route path="edit" element={<EditNote setNotes={setNotes} setTags={setTags} availableTags={tags}/>}/>
-                </Route>
-                <Route path="/*" element={<Navigate to="/" />}/>
-            </Routes>
-
-        </Container>
+        <div className={styles.mainContainer}>
+            <Container className="w-100 h-100">
+                {user?.username != '' && (
+                    <Stack direction="horizontal" gap={2} className="pt-4 justify-content-end">
+                        <Button 
+                            style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color: user?.stylePreferences?.labelColor }}
+                            onClick={() => setSettingModalIsOpen(true)} 
+                            className={styles.button} >
+                            Settings
+                        </Button>
+                        {/* <Button 
+                            style={{ background: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color: user?.stylePreferences?.labelColor }}
+                            onClick={() => setSocialModalIsOpen(true)} 
+                            className={styles.button} >
+                            Friends
+                        </Button> */}
+                    </Stack>
+                )}
+                <SettingsModal 
+                    show={settingsModalIsOpen} 
+                    setModalIsOpen={() => setSettingModalIsOpen(false)}
+                />
+                <SocialModal 
+                    show={socialModalIsOpen} 
+                    setModalIsOpen={() => setSocialModalIsOpen(false)}
+                />
+                <Routes>
+                    <Route path="/" element={<NoteList setTags={setTags} availableTags={tags} notes={notesWithTags}/>}/>
+                    <Route path="/login" element={<Login setUser={setUser}/>}/>
+                    <Route path="/signup" element={<Signup setUser={setUser}/>}/>
+                    <Route path="/new" element={<NewNote setNotes={setNotes} setTags={setTags} availableTags={tags}/>}/>
+                    <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
+                        <Route index element={<ViewNote setNotes={setNotes}/>}/>
+                        <Route path="edit" element={<EditNote setNotes={setNotes} setTags={setTags} availableTags={tags}/>}/>
+                    </Route>
+                    <Route path="/*" element={<Navigate to="/" />}/>
+                </Routes>
+            </Container>
+        </div>
     )
 }
 

@@ -2,6 +2,7 @@ type stylePreferences = {
     primaryButtonColor: string,
     secondaryButtonColor: string,
     backgroundColor: string,
+    textColor: string,
     labelColor: string,
     noteColor: string
 }

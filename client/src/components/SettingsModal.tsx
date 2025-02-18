@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { PhotoshopPicker  } from "react-color" 
 
 import { useUser } from "./UserContext"
-import { updateUserStyle, updateUserProfileWithPassword, updateUserProfileWithoutPassword } from "../api/userApi";
+import { updateUserStyle, updateUserLayout, updateUserProfileWithPassword, updateUserProfileWithoutPassword } from "../api/userApi";
 
 import { GENERIC_ERROR_TEXT } from "../assets/globalStrings";
 import TileIconLight from '../assets/TileIconLight.png'
@@ -24,9 +24,8 @@ export function SettingsModal( props : SettingsModalProps ) {
 
     const { user, setUser } = useUser();
     
-    const settings = ['Profile', 'Themes', 'Social', 'Layout'];
-    const themeSubSettings = ['Background Color', 'Note Color', 'Primary Button Color', 'Secondary Button Color', 'Label'];
-    const socialSubSettings = ['Add Friends', 'Your Contacts'];
+    const settings = ['Profile', 'Themes', 'Layout'];
+    const themeSubSettings = ['Background Color', 'Note Color', 'Primary Button Color', 'Secondary Button Color', 'Label', 'Text'];
 
     const [currSetting, setCurrSetting] = useState(settings[0]);
 
@@ -44,8 +43,6 @@ export function SettingsModal( props : SettingsModalProps ) {
     const [colorPicker, setColorPicker] = useState(true);
     const [selected, setSelected] = useState(false);
     
-    const [currSocialSubSetting, setCurrSocialSubSetting] = useState(socialSubSettings[0]);
-
     const isDark = () => {
         const backgroundColor = user.stylePreferences.backgroundColor.replace(/^#/, '');
 
@@ -111,6 +108,25 @@ export function SettingsModal( props : SettingsModalProps ) {
         }
     }
 
+    const handleLayoutChange = ( layout: string ) => {
+        if(layout == user?.layout) return;
+        
+        const updatedUser = { 
+            ...user, 
+            layout: layout
+        }
+
+        updateUserLayout(updatedUser).then((res) => {
+            console.log(res);
+            if(res.status == 200){
+                setUser(updatedUser);
+            }     
+            else{
+                setErrorText(GENERIC_ERROR_TEXT);
+            }    
+        });
+    }
+
     const handleThemesAccept = ( currThemeSubSetting: string ) => {
         const stylePreferences = {...user?.stylePreferences};
 
@@ -129,6 +145,9 @@ export function SettingsModal( props : SettingsModalProps ) {
                 break;
             case 'Label':
                 stylePreferences.labelColor = currColor;
+                break;
+            case 'Text':
+                stylePreferences.textColor = currColor;
                 break;
         }
         
@@ -171,6 +190,8 @@ export function SettingsModal( props : SettingsModalProps ) {
                 return setCurrColor(user?.stylePreferences?.secondaryButtonColor);
             case 'Label':
                 return setCurrColor(user?.stylePreferences?.labelColor);
+            case 'Text':
+                return setCurrColor(user?.stylePreferences?.textColor);
         }
     };
 
@@ -192,6 +213,8 @@ export function SettingsModal( props : SettingsModalProps ) {
                 return setCurrColor(user?.stylePreferences?.secondaryButtonColor);
             case 'Label':
                 return setCurrColor(user?.stylePreferences?.labelColor);
+            case 'Text':
+                return setCurrColor(user?.stylePreferences?.textColor);
         }
     };
 
@@ -216,6 +239,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                         <ButtonGroup vertical>
                             {settings.map((setting) => {
                                 return <Button 
+                                    key={setting}
                                     style={{ ...primaryStyleProps }}
                                     onClick={() => {setCurrSetting(setting)}} 
                                     className={styles.modalButton}>
@@ -340,58 +364,21 @@ export function SettingsModal( props : SettingsModalProps ) {
                                     />
                                 </Col>
                             )}
-                            {/* <Col xs={9}>
-                                <PhotoshopPicker 
-                                    className={styles.photoshopPicker}
-                                    header={currThemeSubSetting}
-                                    color={currColor}
-                                    onAccept={() => {handleThemesAccept(currThemeSubSetting)}}
-                                    onChange={handleThemesChange}
-                                    onCancel={handleThemesCancel}
-                                />
-                            </Col> */}
-                        </Row>
-                    )}
-                    {currSetting=='Social' && (
-                        <Row>
-                            <Col xs={3}>
-                                {socialSubSettings.map((subSetting) => {
-                                    return <Row><Button 
-                                        style={{ ...secondaryStyleProps }}
-                                        onClick={() => {
-                                            setCurrSocialSubSetting(subSetting);
-                                            setSelected(true);
-                                        }} 
-                                        className={styles.modalButton} >
-                                        {subSetting}
-                                    </Button></Row>
-                                })}
-                            </Col>
-                            {currSocialSubSetting=='Add Friends' && (
-                                <Col xs={9}>
-                                    <Row>SearchBar</Row>
-                                    <Row>Results</Row>
-                                </Col>
-                            )}
-                            {currSocialSubSetting=='Your Contacts' && (
-                                <Col xs={9}>
-                                    <Row>All Contacts</Row>
-                                </Col>
-                            )}
                         </Row>
                     )}
                     {currSetting=='Layout' && (
                         <Row xs={1} sm={2}>
-                            <Button style={{ backgroundColor: user.stylePreferences.backgroundColor, borderColor: user.stylePreferences.backgroundColor  }}>
-                                <Col className={`d-flex flex-column justify-content-center align-items-center ${styles.layoutContainer}`} style={{ borderColor: user.stylePreferences?.labelColor }}>
+                            <Button style={{ backgroundColor: user.stylePreferences.backgroundColor, borderColor: user?.layout == 'tiles' ? ( isDark() ? 'white' : 'black' ) : user.stylePreferences.backgroundColor }}>
+                                <Col className={`d-flex flex-column justify-content-center align-items-center ${styles.layoutContainer}`}>
                                     <Row className="pt-4" style={{ color: user.stylePreferences?.labelColor }}>Tiles</Row>
-                                    <Row className="p-5"><Image src={isDark() ? TileIconLight : TileIconDark}/></Row>
+                                    <Row className="p-5" ><Image src={isDark() ? TileIconLight : TileIconDark} onClick={() => handleLayoutChange('tiles')}/></Row>
                                 </Col>
+                                {/* style={{ borderColor: user?.layout == 'tiles' ? ( isDark() ? 'white' : 'black' ) : user.stylePreferences.backgroundColor}}  */}
                             </Button>
-                            <Button style={{ backgroundColor: user.stylePreferences.backgroundColor, borderColor: user.stylePreferences.backgroundColor }}>
-                                <Col className={`d-flex flex-column justify-content-center align-items-center ${styles.layoutContainer}`} style={{ borderColor: user.stylePreferences?.labelColor }}>
+                            <Button style={{ backgroundColor: user.stylePreferences.backgroundColor, borderColor: user?.layout == 'rows' ? ( isDark() ? 'white' : 'black' ) : user.stylePreferences.backgroundColor }}>
+                                <Col className={`d-flex flex-column justify-content-center align-items-center ${styles.layoutContainer}`}>
                                     <Row className="pt-4" style={{ color: user.stylePreferences?.labelColor }}>Rows</Row>
-                                    <Row className="p-5"><Image src={isDark() ? NoteIconLight : NoteIconDark}/></Row>
+                                    <Row className="p-5"><Image src={isDark() ? NoteIconLight : NoteIconDark} onClick={() => handleLayoutChange('rows')}/></Row>
                                 </Col>
                             </Button>
                         </Row>

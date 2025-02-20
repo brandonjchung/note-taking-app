@@ -7,7 +7,13 @@ import user from "./routes/user.js"
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-app.use(cors());
+const corsOptions ={
+    origin:'*', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+ }
+ 
+app.use(cors(corsOptions))
 app.use(cors({
     origin: "https://bjc-note-taking-app-frontend.vercel.app", // Change this to your frontend URL
     credentials: true

@@ -1,9 +1,9 @@
-import { Button, Col, Row } from "react-bootstrap"
+import { Col, Row } from "react-bootstrap"
 
-import { useUser } from "./UserContext"
+// import { useUser } from "./UserContext"
 
 export function SocialConversations(){
-    const { user, setUser } = useUser();
+    // const { user, setUser } = useUser();
 
     return (
         <>

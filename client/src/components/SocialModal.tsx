@@ -1,5 +1,5 @@
-import { Button, ButtonGroup, Col, Form, Modal, Row, Image, Stack, Tab, Nav } from "react-bootstrap"
-import { useState, useRef } from "react";
+import { Modal, Tab, Nav } from "react-bootstrap"
+import { useState } from "react";
 
 import { SocialConversations } from "./SocialConversations";
 import { SocialFriends } from "./SocialFriends";
@@ -14,24 +14,13 @@ type SocialModalProps = {
 }
 
 export function SocialModal( props : SocialModalProps ) {
-    const { user, setUser } = useUser();
+    const { user } = useUser();
     const [ activeTab, setActiveTab ] = useState(FRIENDS_KEY);
     
     const resetModalValues = () => {
         props.setModalIsOpen(false);
     }
 
-    const primaryStyleProps = {
-        background: user?.stylePreferences?.primaryButtonColor, 
-        borderColor: user?.stylePreferences?.primaryButtonColor, 
-        color:user?.stylePreferences?.labelColor,
-    };
-    
-    const secondaryStyleProps = {
-        background: user?.stylePreferences?.secondaryButtonColor, 
-        borderColor: user?.stylePreferences?.secondaryButtonColor, 
-        color:user?.stylePreferences?.labelColor,
-    };
 
     return <Modal size="xl" show={props.show} onHide={resetModalValues} centered>
         <Modal.Header style={{ background: user?.stylePreferences?.backgroundColor, border:'none' }} closeButton></Modal.Header>

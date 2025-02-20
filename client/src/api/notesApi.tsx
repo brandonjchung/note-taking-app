@@ -1,7 +1,7 @@
 import { RawNote, RawNoteData } from "../types/notes";
 
 export const createNote = async ( note : RawNoteData ) => {
-    const response = await fetch(`http://localhost:5050/note/`, {
+    const response = await fetch(`${process.env.HOST_URL}/note/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -24,7 +24,7 @@ export const createNote = async ( note : RawNoteData ) => {
 }
 
 export const getNotes = async ( userId: string ) => {
-    const response = await fetch(`http://localhost:5050/note/${userId}`);
+    const response = await fetch(`${process.env.HOST_URL}/note/${userId}`);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -40,7 +40,7 @@ export const getNotes = async ( userId: string ) => {
 }
 
 export const updateNote = async ( note : RawNote ) => {
-    const response = await fetch(`http://localhost:5050/note/${note._id}`, {
+    const response = await fetch(`${process.env.HOST_URL}/note/${note._id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -60,7 +60,7 @@ export const updateNote = async ( note : RawNote ) => {
 }
 
 export const deleteNote = async ( id: string ) => {
-    const response = await fetch(`http://localhost:5050/note/${id}`, {
+    const response = await fetch(`${process.env.HOST_URL}/note/${id}`, {
         method: "DELETE",
     });
 

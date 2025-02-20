@@ -1,7 +1,7 @@
 import { Tag, RawTag } from "../types/tag";
 
 export const getTags = async ( userId : string ) => {
-    const response = await fetch(`http://localhost:5050/tag/${userId}`);
+    const response = await fetch(`${process.env.HOST_URL}/tag/${userId}`);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -15,7 +15,7 @@ export const getTags = async ( userId : string ) => {
 }
 
 export const createTag = async ( rawTagData: RawTag ) => {
-    const response = await fetch(`http://localhost:5050/tag/`, {
+    const response = await fetch(`${process.env.HOST_URL}/tag/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -37,7 +37,7 @@ export const createTag = async ( rawTagData: RawTag ) => {
 
 
 export const createTags = async ( labels : string[], userId : string ) => {
-    const response = await fetch(`http://localhost:5050/tag/many`, {
+    const response = await fetch(`${process.env.HOST_URL}/tag/many`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -57,7 +57,7 @@ export const createTags = async ( labels : string[], userId : string ) => {
 }
 
 export const updateTag = async ( tag : Tag ) => {
-    const response = await fetch(`http://localhost:5050/tag/${tag._id}`, {
+    const response = await fetch(`${process.env.HOST_URL}/tag/${tag._id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -77,7 +77,7 @@ export const updateTag = async ( tag : Tag ) => {
 }
 
 export const updateTags = async ( tags : Tag[] ) => {
-    const response = await fetch(`http://localhost:5050/tag/many`, {
+    const response = await fetch(`${process.env.HOST_URL}/tag/many`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -96,7 +96,7 @@ export const updateTags = async ( tags : Tag[] ) => {
 }
 
 export const deleteTag = async ( id: string ) => {
-    const response = await fetch(`http://localhost:5050/tag/${id}`, {
+    const response = await fetch(`${process.env.HOST_URL}/tag/${id}`, {
         method: "DELETE",
     });
 
@@ -111,7 +111,7 @@ export const deleteTag = async ( id: string ) => {
 }
 
 export const deleteTags = async ( ids: string[] ) => {
-    const response = await fetch(`http://localhost:5050/tag/many`, {
+    const response = await fetch(`${process.env.HOST_URL}/tag/many`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"

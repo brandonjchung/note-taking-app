@@ -1,71 +1,64 @@
 import { Dispatch, SetStateAction, useState, FormEvent, useRef } from "react"
 import { Form, Stack, Row, Col, Button } from "react-bootstrap"
+import { Link, useParams, useNavigate } from "react-router-dom"
+import CreatableReactSelect from "react-select/creatable"
+
 import { onCreateNote, onEditNote, onDeleteNote } from "../helper/note_util"
-import { NoteData, Tag, RawNote } from "../App"
-import { Link, useParams } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
-import { siteStyles } from "../interfaces/siteStyles"
 import { onCreateTag } from "../helper/tag_util"
 
-import CreatableReactSelect from "react-select/creatable"
+import { NoteData, RawNote } from "../types/notes"
+import { Tag } from "../types/tag"
+
+import { useUser } from "./UserContext"
+
 import globalStyle from "../assets/global.module.css"
 
 type NoteFormProps = {
     setNotes: Dispatch<SetStateAction<RawNote[]>>, 
     setTags: Dispatch<SetStateAction<Tag[]>>,
-    availableTags: Tag[],
-    siteStyles: siteStyles
+    availableTags: Tag[]
 } & Partial<NoteData>
 
-export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="", markdown = "", tags = [] } : NoteFormProps) {
+export function NoteForm({ setNotes, setTags, availableTags, title="", markdown = "", tags = [] } : NoteFormProps) {
     const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
     const markdownRef = useRef<HTMLTextAreaElement>(null)
     const titleRef = useRef<HTMLInputElement>(null)
+
+    const { user } = useUser();
     const params = useParams();
     const nav = useNavigate();
 
     const siteStyledTextBoxes = {
-        backgroundColor: siteStyles.note, 
-        borderColor: siteStyles.note, 
-        color: siteStyles.label
+        backgroundColor: user?.stylePreferences?.noteColor, 
+        borderColor: user?.stylePreferences?.noteColor, 
+        color: user?.stylePreferences?.textColor
     }
     const siteStyledTags = {
-        backgroundColor: siteStyles.background, 
-        borderColor: siteStyles.note, 
-        color: siteStyles.label,
+        borderColor: user?.stylePreferences?.noteColor, 
+        color: user?.stylePreferences?.textColor,
         borderRadius: "3px"
     }
     
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
+        
+        const noteData = {
+            noteDataProps: {
+                title: titleRef.current!.value,
+                markdown: markdownRef.current!.value,
+                userId: user._id,
+                tags: selectedTags
+            },
+            nav,
+            setNotes
+        };
 
         if(params.id){
             const id = params.id;
-            const noteData = {
-                noteDataProps: {
-                    title: titleRef.current!.value,
-                    markdown: markdownRef.current!.value,
-                    tags: selectedTags
-                },
-                setNotes, 
-                nav,
-                id
-            };
-    
-            onEditNote(noteData);
+            onEditNote({...noteData, id});
 
         }
         else{
-            const noteData = {
-                noteDataProps: {
-                    title: titleRef.current!.value,
-                    markdown: markdownRef.current!.value,
-                    tags: selectedTags
-                },
-                setNotes, 
-                nav
-            };
-    
             onCreateNote(noteData);
         }
     }
@@ -76,13 +69,13 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                 <Row>
                     <Col>
                         <Form.Group controlId="title">
-                            <Form.Label style={{ color: siteStyles.label }}>Title</Form.Label>
+                            <Form.Label style={{ color: user?.stylePreferences?.labelColor }}>Title</Form.Label>
                             <Form.Control style={{ ...siteStyledTextBoxes }} ref={titleRef} defaultValue={title} required/>
                         </Form.Group>
                     </Col>    
                     <Col>
                         <Form.Group controlId="tags">
-                            <Form.Label style={{ color: siteStyles.label }}>Tags</Form.Label>
+                            <Form.Label style={{ color: user?.stylePreferences?.labelColor }}>Tags</Form.Label>
                             {/* 
                                 CreatableReactSelect options in the form {label, value}
                             */}
@@ -99,7 +92,8 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                                     option: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 }}
                                 onCreateOption={label => {
-                                    onCreateTag({label, setTags}).then((tagData: void | Tag[]) => {
+                                    const userId = user._id;
+                                    onCreateTag({label, userId, setTags}).then((tagData: void | Tag[]) => {
                                         if(tagData != null){
                                             setSelectedTags(prevTags => {
                                                 const newTag = tagData.find(tag => tag.label == label);
@@ -119,7 +113,7 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                                 })}
                                 onChange={tags => {
                                     setSelectedTags(tags.map(tag => {
-                                        return { label: tag.label, _id: tag.value}
+                                        return { label: tag.label, _id: tag.value, userId: user._id}
                                     }))
                                 }}
                                 isMulti/>
@@ -129,14 +123,14 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                 <Row>
                     <Col>
                         <Form.Group controlId="markdown">
-                            <Form.Label style={{ color: siteStyles.label }}>Body</Form.Label>
+                            <Form.Label style={{ color: user?.stylePreferences?.labelColor }}>Body</Form.Label>
                             <Form.Control style={{ ...siteStyledTextBoxes }} ref={markdownRef} defaultValue={markdown} as="textarea" rows={15} required/>
                         </Form.Group>
                     </Col>    
                 </Row>
                 <Stack direction="horizontal" gap={2} className="justify-content-end">
                     <Button 
-                        style={{ background: siteStyles.primary, borderColor: siteStyles.primary, color:siteStyles.label }}
+                        style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color:user?.stylePreferences?.labelColor }}
                         className={globalStyle.button} 
                         type="submit" >
                         Save
@@ -146,12 +140,7 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                             onClick={() => {
                                 const id = params.id;
                                 if(id){
-                                    const onDeleteNotesProps = {
-                                        setNotes,
-                                        id, 
-                                        nav
-                                    }
-                                    onDeleteNote(onDeleteNotesProps);
+                                    onDeleteNote({setNotes, id, nav});
                                 }
                             }}   
                             className={globalStyle.button}
@@ -161,7 +150,7 @@ export function NoteForm({ setNotes, setTags, availableTags, siteStyles, title="
                     )}
                     <Link to="/">
                         <Button 
-                            style={{ background: siteStyles.secondary, borderColor: siteStyles.secondary, color:siteStyles.label }}
+                            style={{ background: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color:user?.stylePreferences?.labelColor }}
                             type="button" 
                             className={globalStyle.button}>
                             Cancel

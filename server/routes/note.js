@@ -15,13 +15,13 @@ router.get("/", async (req, res) => {
     res.send(results).status(200);
 })
 
-// get note by id
+// get notes by userId
 router.get("/:id", async (req, res) => {
     let collection = db.collection("notes");
 
-    let query = { _id: new ObjectId(req.params.id) };
+    let query = { userId: req.params.id };
 
-    let result = await collection.findOne(query);
+    let result = await collection.find(query).toArray();
 
     if(!result) res.send("Not Found").status(404);
     else res.send(result).status(200);
@@ -33,14 +33,16 @@ router.post("/", async (req, res) => {
         let newNote = {
             title: req.body.title,
             markdown: req.body.markdown,
+            userId: req.body.userId,
             tagIds: req.body.tagIds,
         };
 
         let collection = db.collection("notes");
 
         let result = await collection.insertOne(newNote);
+        console.log(result);
 
-        res.send(result).status(204);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");
@@ -64,7 +66,7 @@ router.patch("/:id", async (req, res) => {
         let result = await collection.updateOne(query, updates);
         console.log(result);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error updating record");
@@ -80,7 +82,7 @@ router.delete("/:id", async (req, res) => {
 
         let result = await collection.deleteOne(query);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error deleting record");

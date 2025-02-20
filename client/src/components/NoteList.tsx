@@ -1,27 +1,30 @@
+import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react"
 import { onCreateTags, onUpdateTags, onDeleteTags } from "../helper/tag_util"
 import { Form, Row, Col, Stack, Button, Modal } from "react-bootstrap"
-import { Dispatch, SetStateAction, useEffect } from "react"
-import { siteStyles } from "../interfaces/siteStyles"
 import { Link } from "react-router-dom"
 import { NoteCard } from "./NoteCard"
-import { Tag, Note } from "../App"
-import { useState } from "react"
-import { useMemo } from "react"
+
+import ReactSelect from "react-select"
+
+import { useUser } from "./UserContext"
+
+import { Note } from "../types/notes"
+import { Tag } from "../types/tag"
 
 import globalStyle from "../assets/global.module.css"
-import ReactSelect from "react-select"
 
 type NoteListProps = {
     availableTags: Tag[],
     notes: Note[],
-    setTags: Dispatch<SetStateAction<Tag[]>>,
-    siteStyles: siteStyles
+    setTags: Dispatch<SetStateAction<Tag[]>>
 }
 
-export function NoteList({ availableTags, notes, setTags, siteStyles } : NoteListProps) {
+export function NoteList({ availableTags, notes, setTags } : NoteListProps) {
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
     const [title, setTitle] = useState("");
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    
+    const { user } = useUser();
 
     const filteredNotes = useMemo(() => {
         return notes.filter(note => {
@@ -31,41 +34,40 @@ export function NoteList({ availableTags, notes, setTags, siteStyles } : NoteLis
     }, [title, selectedTags, notes]) 
 
     const siteStyledTextBoxes = {
-        backgroundColor: siteStyles.note, 
-        borderColor: siteStyles.note, 
-        color: siteStyles.label
+        backgroundColor: user?.stylePreferences?.noteColor, 
+        borderColor: user?.stylePreferences?.noteColor, 
+        color: user?.stylePreferences?.textColor
     };
     
     const siteStyledTags = {
-        backgroundColor: siteStyles.background, 
-        borderColor: siteStyles.note, 
-        color: siteStyles.label,
+        borderColor: user?.stylePreferences?.noteColor, 
+        color: user?.stylePreferences?.textColor,
         borderRadius: "3px"
     };
 
     return <>
         <Row className="align-items-center mb-4">
-            <Col><h1 style={{ color: siteStyles.label }}>Notes</h1></Col>
+            <Col><h1 style={{ color: user?.stylePreferences?.labelColor }}>Notes</h1></Col>
             <Col xs="auto">
                 <Stack gap={2} direction="horizontal">
                     <Link to="/new">
                         <Button 
                             className={globalStyle.button}
-                            style={{ backgroundColor: siteStyles.primary, borderColor: siteStyles.primary, color: siteStyles.label }}>
+                            style={{ backgroundColor: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color: user?.stylePreferences?.labelColor }}>
                             Create
                         </Button>
                     </Link>
                     <Button 
                         className={globalStyle.button}
                         onClick={() => setModalIsOpen(true)} 
-                        style={{ backgroundColor: siteStyles.secondary, borderColor: siteStyles.secondary, color: siteStyles.label }}>
+                        style={{ backgroundColor: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color: user?.stylePreferences?.labelColor }}>
                         Edit Tags
                     </Button>
                 </Stack>
             </Col>
         </Row>
         <Form>
-            <Row className="mb-4" style={{ color: siteStyles.label }}>
+            <Row className="mb-4" style={{ color: user?.stylePreferences?.labelColor }}>
                 <Col>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
@@ -80,25 +82,28 @@ export function NoteList({ availableTags, notes, setTags, siteStyles } : NoteLis
                     <Form.Group controlId="tags">
                         <Form.Label>Tags</Form.Label>
                         <ReactSelect 
+                            className="react-select-container"
+                            classNamePrefix="react-select"
                             styles={{
                                 control: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 menu: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 input: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 noOptionsMessage: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
-                                option: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
+                                option: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes, color:'black' }),
+                                placeholder: (baseStyles) => ({ ...baseStyles, ...siteStyledTextBoxes }),
                                 multiValue: (baseStyles) => ({ ...baseStyles, ...siteStyledTags, }),
                                 multiValueLabel: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),
                                 multiValueRemove: (baseStyles) => ({ ...baseStyles, ...siteStyledTags }),
                             }}
                             options={availableTags.map(tag => {
-                                return {label: tag.label, value: tag._id}
+                                return {label: tag.label, value: tag._id, userId: tag.userId }
                             })}
                             value={selectedTags.map(tag => {
-                                return {label: tag.label, value: tag._id}    
+                                return {label: tag.label, value: tag._id, userId: tag.userId }    
                             })}
                             onChange={tags => {
                                 setSelectedTags(tags.map(tag => {
-                                    return { label: tag.label, _id: tag.value}
+                                    return { label: tag.label, _id: tag.value, userId: tag.userId }
                                 }))
                             }}
                             isMulti/>
@@ -109,7 +114,7 @@ export function NoteList({ availableTags, notes, setTags, siteStyles } : NoteLis
         <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
             {filteredNotes.map(note => (
                 <Col key={note._id}>
-                    <NoteCard id={note._id} title={note.title} tags={note.tags} siteStyles={siteStyles}/>
+                    <NoteCard id={note._id} title={note.title} tags={note.tags}/>
                 </Col>
             ))}
         </Row>
@@ -117,7 +122,6 @@ export function NoteList({ availableTags, notes, setTags, siteStyles } : NoteLis
             availableTags={availableTags} 
             setTags={setTags} 
             closeModal={() => setModalIsOpen(false)}
-            siteStyles={siteStyles}
             show={modalIsOpen}
         />
     </>
@@ -127,16 +131,17 @@ type EditTagsModalProps = {
     availableTags: Tag[],
     setTags: Dispatch<SetStateAction<Tag[]>>,
     closeModal: () => void
-    siteStyles: siteStyles
     show: boolean,
 }
 
-function EditTagsModal({ availableTags, setTags, closeModal, siteStyles, show }: EditTagsModalProps) {
+function EditTagsModal({ availableTags, setTags, closeModal, show }: EditTagsModalProps) {
     const [tagsToUpdate, setTagsToUpdate] = useState<Tag[]>(availableTags);
     const [tagsToCreate, setTagsToCreate] = useState<string[]>([]);
     const [tagsToDelete, setTagsToDelete] = useState<Tag[]>([]);
 
     const [changeMade, setChangeMade] = useState<boolean>(false);
+
+    const { user } = useUser();
 
     useEffect(() => {
         setTagsToUpdate(availableTags);
@@ -154,6 +159,7 @@ function EditTagsModal({ availableTags, setTags, closeModal, siteStyles, show }:
             console.log(filteredTags);
             const onCreateTagsProps = {
                 tagsToCreate: filteredTags,
+                userId: user._id,
                 setTags
             }
             onCreateTags(onCreateTagsProps);
@@ -182,10 +188,10 @@ function EditTagsModal({ availableTags, setTags, closeModal, siteStyles, show }:
     };
 
     return <Modal show={show} onHide={handleClose}>
-        <Modal.Header  style={{ background: siteStyles.background, color: siteStyles.label}} closeButton>
+        <Modal.Header  style={{ background: user?.stylePreferences?.backgroundColor, color: user?.stylePreferences?.labelColor}} closeButton>
             <Modal.Title>Edit Tags</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ background: siteStyles.background, color: siteStyles.label}} >
+        <Modal.Body style={{ background: user?.stylePreferences?.backgroundColor, color: user?.stylePreferences?.labelColor}} >
             <Form>
                 <Stack gap={2}>
                     {tagsToUpdate.map((tag, index) => (
@@ -246,7 +252,7 @@ function EditTagsModal({ availableTags, setTags, closeModal, siteStyles, show }:
                     <Row className="d-flex justify-content-between pt-1">
                         <Col xs={6}>
                             <Button 
-                                style={{ background: siteStyles.primary, borderColor: siteStyles.primary, color:siteStyles.label }}
+                                style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color:user?.stylePreferences?.labelColor }}
                                 onClick={() => {
                                     setTagsToCreate((prevTags: string[]) => {
                                         return [...prevTags, '']
@@ -257,18 +263,18 @@ function EditTagsModal({ availableTags, setTags, closeModal, siteStyles, show }:
                         </Col>
                         <Col xs={6} className="d-flex justify-content-end">
                             <Button 
-                                style={{ background: siteStyles.primary, borderColor: siteStyles.primary, color:siteStyles.label, marginRight:'8px' }}
-                                onClick={() => {handleSave()}}
-                                className={globalStyle.button} 
-                                type="button" >
-                                Save
-                            </Button>
-                            <Button 
-                                style={{ background: siteStyles.secondary, borderColor: siteStyles.secondary, color:siteStyles.label }}
+                                style={{ background: user?.stylePreferences?.secondaryButtonColor, borderColor: user?.stylePreferences?.secondaryButtonColor, color:user?.stylePreferences?.labelColor, marginRight:'8px' }}
                                 onClick={() => {handleClose()}}
                                 type="button" 
                                 className={globalStyle.button}>
                                 Cancel
+                            </Button>
+                            <Button 
+                                style={{ background: user?.stylePreferences?.primaryButtonColor, borderColor: user?.stylePreferences?.primaryButtonColor, color:user?.stylePreferences?.labelColor }}
+                                onClick={() => {handleSave()}}
+                                className={globalStyle.button} 
+                                type="button" >
+                                Save
                             </Button>
                         </Col>
                     </Row>

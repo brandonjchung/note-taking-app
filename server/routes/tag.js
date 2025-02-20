@@ -12,36 +12,19 @@ router.get("/", async (req, res) => {
 
     let results = await collection.find({}).toArray();
 
-    res.send(results).status(200);
+    res.status(200).send(results);
 })
 
-// get Tag by id
+// get Tags by userId
 router.get("/:id", async (req, res) => {
     let collection = db.collection("tags");
 
-    let query = { _id: new ObjectId(req.params.id) };
+    let query = { userId: req.params.id };
 
-    let result = await collection.findOne(query);
+    let result = await collection.find(query).toArray();
 
-    if(!result) res.send("Not Found").status(404);
-    else res.send(result).status(200);
-})
-
-// create new Tags
-router.post("/many", async (req, res) => {
-    try {
-
-        let collection = db.collection("tags");
-
-        const newTags = req.body.labels.map((label) => { return { label: label }})
-
-        let result = await collection.insertMany(newTags);
-
-        res.send(result).status(204);
-    } catch(err) {
-        console.log(err);
-        res.status(500).send("Error creating record");
-    }
+    if(!result) res.status(404).send("Not Found");
+    else res.status(200).send(result);
 })
 
 // create new Tag
@@ -49,13 +32,31 @@ router.post("/", async (req, res) => {
     try {
         let newTag = {
             label: req.body.label,
+            userId: req.body.userId,
         };
 
         let collection = db.collection("tags");
 
         let result = await collection.insertOne(newTag);
+        console.log(result);
 
-        res.send(result).status(204);
+        res.status(200).send(result);
+    } catch(err) {
+        console.log(err);
+        res.status(500).send("Error creating record");
+    }
+})
+
+// create new Tags
+router.post("/many", async (req, res) => {
+    try {
+        let collection = db.collection("tags");
+        console.log(1);
+        const newTags = req.body.labels.map((label) => { return { label: label, userId: req.body.userId }})
+
+        let result = await collection.insertMany(newTags);
+
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error creating record");
@@ -79,7 +80,7 @@ router.patch("/many", async (req, res) => {
 
         let result = await collection.bulkWrite(bulkOperation);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error updating record");
@@ -101,7 +102,7 @@ router.patch("/:id", async (req, res) => {
 
         let result = await collection.updateOne(query, updates);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error updating record");
@@ -121,7 +122,7 @@ router.delete("/many", async (req, res) => {
 
         let result = await collection.deleteMany(query);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error deleting record");
@@ -137,7 +138,7 @@ router.delete("/:id", async (req, res) => {
 
         let result = await collection.deleteOne(query);
 
-        res.send(result).status(200);
+        res.status(200).send(result);
     } catch(err) {
         console.log(err);
         res.status(500).send("Error deleting record");

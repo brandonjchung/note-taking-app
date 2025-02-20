@@ -1,7 +1,7 @@
 import { createNote, getNotes, updateNote, deleteNote } from "../api/notesApi"
 import { NavigateFunction } from "react-router-dom";
 import { Dispatch, SetStateAction } from "react"
-import { RawNote, NoteData } from "../App";
+import { RawNote, NoteData } from "../types/notes";
 
 type onCreateNoteProps = {
     noteDataProps: NoteData, 
@@ -10,9 +10,10 @@ type onCreateNoteProps = {
 }
 
 export function onCreateNote( { noteDataProps: { tags, ...data }, setNotes, nav }: onCreateNoteProps ) {
+
     createNote({...data, tagIds: tags.map(tag => tag._id)}).then((res: string) => {
         if(res != null){
-            getNotes().then((noteData: RawNote[]) => {
+            getNotes(data.userId).then((noteData: RawNote[]) => {
                 if(noteData){
                     setNotes(noteData);
                     nav(`/${res}`);

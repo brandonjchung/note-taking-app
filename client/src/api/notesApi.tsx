@@ -1,4 +1,4 @@
-import { RawNote, RawNoteData } from "../App";
+import { RawNote, RawNoteData } from "../types/notes";
 
 export const createNote = async ( note : RawNoteData ) => {
     const response = await fetch(`http://localhost:5050/note/`, {
@@ -9,7 +9,6 @@ export const createNote = async ( note : RawNoteData ) => {
         body: JSON.stringify(note)
     });
 
-    const noteData = await response.json();
 
     if(!response.ok) {
         const message = `An error occurred: ${response.status}`;
@@ -17,22 +16,27 @@ export const createNote = async ( note : RawNoteData ) => {
         return null;
     }
     else{
+        console.log(response);
+        const noteData = await response.json();
+        console.log(noteData);
         return noteData.insertedId;
     }
 }
 
-export const getNotes = async () => {
-    const response = await fetch(`http://localhost:5050/note/`);
+export const getNotes = async ( userId: string ) => {
+    const response = await fetch(`http://localhost:5050/note/${userId}`);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
         console.error(message);
         return null;
     }
+    else{
+        const noteData = await response.json();
+    
+        return noteData;
+    }
 
-    const noteData = await response.json();
-
-    return noteData;
 }
 
 export const updateNote = async ( note : RawNote ) => {
@@ -43,7 +47,6 @@ export const updateNote = async ( note : RawNote ) => {
         },
         body: JSON.stringify(note)
     });
-    console.log(response);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.status}`;

@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(cors({
-    origin: "http://localhost:5173", // Change this to your frontend URL
+    origin: "https://bjc-note-taking-app-frontend.vercel.app", // Change this to your frontend URL
     credentials: true
   }));
 app.options("*", cors());

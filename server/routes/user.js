@@ -16,13 +16,17 @@ router.post("/login", async (req, res) => {
     let query = { username: req.body.username };
 
     let result = await collection.findOne(query);
+    console.log(result);
 
     const correctPassword = await bcrypt.compare(req.body.password, result.password)
 
+    console.log(correctPassword);
     if(result == null || correctPassword == false) {
+        console.log('res.status(404).send(result);');
         res.status(404).send(result);
     }
     else {
+        console.log('res.status(200).send(JSON.stringify(result));');
         res.status(200).send(JSON.stringify(result));
     }
 })

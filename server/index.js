@@ -14,11 +14,18 @@ const corsOptions ={
  }
  
 app.use(cors(corsOptions))
-app.use(cors({
-    origin: "https://bjc-note-taking-app-frontend.vercel.app", // Change this to your frontend URL
-    credentials: true
-  }));
-app.options("*", cors());
+// app.use(cors({
+//     origin: "https://bjc-note-taking-app-frontend.vercel.app", // Change this to your frontend URL
+//     credentials: true
+//   }));
+// app.options("*", cors());
+app.options("*", (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.status(200).end();
+  });
   
 app.use(express.json());
 app.use('/note', notes);

@@ -57,7 +57,6 @@ function App() {
             // remove the colors from everywhere use the usercontext to directly access the settings
             // reattach notes and tags to lookup logged in user
             // only query notes and tags by logged in user
-            console.log(user);
         if(user?._id == '' || user?._id == null){
             nav(`/login`);
             return;

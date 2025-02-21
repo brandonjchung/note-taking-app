@@ -6,7 +6,6 @@ export const loginUser = async ( username: string, password: string ) => {
         headers: {
             "Content-Type": "application/json"
         },
-        credentials: "include", // 🔥 Important for cookies/sessions
         body: JSON.stringify({
             username: username,
             password: password

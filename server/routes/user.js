@@ -2,7 +2,7 @@ import express from "express";
 
 import db from "../db/connection.js";
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 import { ObjectId } from "mongodb";
 

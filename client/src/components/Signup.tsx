@@ -46,6 +46,7 @@ export function Signup({ setUser } : SignupProps) {
 
         signupUser(newUser).then((res) => {
             if(res instanceof Response == false){
+                console.log(res);
                 setUser(res);
                 nav(`/`)
             }          

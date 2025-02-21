@@ -327,6 +327,7 @@ export function SettingsModal( props : SettingsModalProps ) {
                             <Col xs={3}>
                                 {themeSubSettings.map((subSetting) => {
                                     return <Row><Button 
+                                        key={subSetting}
                                         style={{ ...secondaryStyleProps }}
                                         onClick={() => {
                                             handleThemesSubtheme(subSetting);

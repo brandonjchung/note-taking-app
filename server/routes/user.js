@@ -16,7 +16,6 @@ router.post("/login", async (req, res) => {
     let query = { username: req.body.username };
 
     let result = await collection.findOne(query);
-    console.log(result);
 
     const correctPassword = await bcrypt.compare(req.body.password, result.password)
 
@@ -34,6 +33,7 @@ router.post("/login", async (req, res) => {
 // sign up a new user
 router.post("/signup", async (req, res) => {
     try {
+        console.log('try');
         let collection = db.collection("users");
 
         let doesUsernameExist = await collection.findOne({ username: req.body.username });
@@ -44,11 +44,13 @@ router.post("/signup", async (req, res) => {
         }
         
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    
+        console.log('req.body');
+        console.log(req.body);
         let newUser = {
             username: req.body.username,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
+            stylePreferences: req.body.stylePreferences,
             password: hashedPassword
         };
 

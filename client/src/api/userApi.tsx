@@ -23,6 +23,7 @@ export const loginUser = async ( username: string, password: string ) => {
 }
 
 export const signupUser = async ( user: User ) => {
+    console.log(user);
     const response = await fetch(`${import.meta.env.VITE_HOST_URL}/user/signup`, {
         method: "POST",
         headers: {
@@ -37,7 +38,7 @@ export const signupUser = async ( user: User ) => {
         return response;
     }
     else{
-        return await response.json();;
+        return await response.json();
     }
 }
 

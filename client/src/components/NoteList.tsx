@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react"
 import { onCreateTags, onUpdateTags, onDeleteTags } from "../helper/tag_util"
 import { Form, Row, Col, Stack, Button, Modal } from "react-bootstrap"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { NoteCard } from "./NoteCard"
 
 import ReactSelect from "react-select"
@@ -44,6 +44,15 @@ export function NoteList({ availableTags, notes, setTags } : NoteListProps) {
         color: user?.stylePreferences?.textColor,
         borderRadius: "3px"
     };
+
+    const nav = useNavigate();
+
+    useEffect(() => {
+        if(user?._id == '' || user?._id == null){
+            nav(`/login`);
+            return;
+        }
+    })
 
     return <>
         <Row className="align-items-center mb-4">

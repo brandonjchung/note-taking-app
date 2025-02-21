@@ -96,7 +96,6 @@ export function SettingsModal( props : SettingsModalProps ) {
             }
 
             updateUserProfileWithoutPassword(updatedUser).then((res) => {
-                console.log(res);
                 if(res.status == 200){
                     setUser(updatedUser);
                 }       
@@ -117,7 +116,6 @@ export function SettingsModal( props : SettingsModalProps ) {
         }
 
         updateUserLayout(updatedUser).then((res) => {
-            console.log(res);
             if(res.status == 200){
                 setUser(updatedUser);
             }     
@@ -164,7 +162,6 @@ export function SettingsModal( props : SettingsModalProps ) {
         }
 
         updateUserStyle(updatedUser).then((res) => {
-            console.log(res);
             if(res.status == 200){
                 setUser(updatedUser);
             }     

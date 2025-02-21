@@ -1,7 +1,7 @@
 import { RawNote, RawNoteData } from "../types/notes";
 
 export const createNote = async ( note : RawNoteData ) => {
-    const response = await fetch(`${process.env.HOST_URL}/note/`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/note/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -16,15 +16,13 @@ export const createNote = async ( note : RawNoteData ) => {
         return null;
     }
     else{
-        console.log(response);
         const noteData = await response.json();
-        console.log(noteData);
         return noteData.insertedId;
     }
 }
 
 export const getNotes = async ( userId: string ) => {
-    const response = await fetch(`${process.env.HOST_URL}/note/${userId}`);
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/note/${userId}`);
 
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -40,7 +38,7 @@ export const getNotes = async ( userId: string ) => {
 }
 
 export const updateNote = async ( note : RawNote ) => {
-    const response = await fetch(`${process.env.HOST_URL}/note/${note._id}`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/note/${note._id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -60,11 +58,10 @@ export const updateNote = async ( note : RawNote ) => {
 }
 
 export const deleteNote = async ( id: string ) => {
-    const response = await fetch(`${process.env.HOST_URL}/note/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/note/${id}`, {
         method: "DELETE",
     });
 
-    console.log(response);
     if(!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
         console.error(message);

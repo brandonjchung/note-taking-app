@@ -23,7 +23,7 @@ export const loginUser = async ( username: string, password: string ) => {
 }
 
 export const signupUser = async ( user: User ) => {
-    const response = await fetch(`${process.env.HOST_URL}/user/signup`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/user/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -42,7 +42,7 @@ export const signupUser = async ( user: User ) => {
 }
 
 export const updateUserStyle = async ( user: User ) => {
-    const response = await fetch(`${process.env.HOST_URL}/user/updateStyle`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/user/updateStyle`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -59,7 +59,7 @@ export const updateUserStyle = async ( user: User ) => {
 }
 
 export const updateUserLayout = async ( user: User ) => {
-    const response = await fetch(`${process.env.HOST_URL}/user/updateLayout`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/user/updateLayout`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -76,7 +76,7 @@ export const updateUserLayout = async ( user: User ) => {
 }
 
 export const updateUserProfileWithPassword = async ( user: User ) => {
-    const response = await fetch(`${process.env.HOST_URL}/user/updateProfileWithPassword`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/user/updateProfileWithPassword`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -93,7 +93,7 @@ export const updateUserProfileWithPassword = async ( user: User ) => {
 }
 
 export const updateUserProfileWithoutPassword = async ( user: User ) => {
-    const response = await fetch(`${process.env.HOST_URL}/user/updateProfileWithoutPassword`, {
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/user/updateProfileWithoutPassword`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"

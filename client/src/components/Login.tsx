@@ -29,7 +29,6 @@ export function Login({ setUser } : LoginProps) {
         e.preventDefault();
 
         loginUser(usernameRef.current!.value, passwordRef.current!.value).then((res) => {
-            console.log(res);
 
             if(res instanceof Response == false){
                 setUser((defaultSettings) => {

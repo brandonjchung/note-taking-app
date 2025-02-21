@@ -156,7 +156,6 @@ function EditTagsModal({ availableTags, setTags, closeModal, show }: EditTagsMod
         // tags are not saving or being validated correctly or rendering across site upon update 
 
         if(filteredTags.length > 0){
-            console.log(filteredTags);
             const onCreateTagsProps = {
                 tagsToCreate: filteredTags,
                 userId: user._id,
